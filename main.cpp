@@ -4,13 +4,14 @@
 #include <iostream>
 #include <deque>
 
+//NOTE: SAMPLE CODE TO TEST HITBOXES.
 
 void display();
 void createTimer(int value);
 void updateTimer(int value);
 
 Dimension bird = Dimension(0.1, 0.2, 0.1, 0.0);
-Collide collision;
+Collision collision;
 
 
 int main(int argc, char** argv) {

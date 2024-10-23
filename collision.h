@@ -1,39 +1,17 @@
 #ifndef COLLIDE_H
 #define COLLIDE_H
 
+#include "dimension.h"
 #include <deque>
 
-// Dimension Class Declaration
-class Dimension {
-    public:
-        float xLeft;
-        float xRight;
-        float yBot;
-        float yTop;
-
-        // Constructor
-        Dimension(float xLeft, float xRight, float yBot, float yTop);
-
-        // Public Methods
-        bool checkCollision(const Dimension& dimension);
-        void updateX(float offset);
-
-    private:
-        // Private Methods for X and Y Collision Detection
-        bool checkXCollision(const Dimension& dimension);
-        bool checkYCollision(const Dimension& dimension);
-};
-
-// Collide Class Declaration
-class Collide {
+// Collision Class Declaration
+class Collision {
     public:
         std::deque<Dimension*> pipes;
 
-        // Constructor
-        Collide() = default;
-        ~Collide();
+        Collision() = default;
+        ~Collision();
 
-        // Public Methods
         void createPipe(float yLower, float ySpace);
         void update(const Dimension& bird);
         bool checkCollision(Dimension bird);
