@@ -59,7 +59,7 @@ void createTimer(int value) {
 }
 
 void updateTimer(int value) {
-    collision.update(bird);
+    collision.update(bird, -0.01f);
     
     if (collision.checkCollision(bird)) {
         std::cout << "COLLISION!\n";
