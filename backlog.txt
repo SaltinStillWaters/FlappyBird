@@ -1,0 +1,4 @@
+backend:
+- implement upper and lower bounds
+- throw nessecary exceptions
+- review integration with front-end

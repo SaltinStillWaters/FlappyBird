@@ -7,7 +7,6 @@ Collision::~Collision() {
     }
 }
 
-
 void Collision::createPipe(float yLower, float ySpace) {
     Dimension* pipeBot = new Dimension(X_START_LEFT, X_START_LEFT + PIPE_WIDTH, Y_BOT_LIMIT, yLower);
     Dimension* pipeTop = new Dimension(X_START_LEFT, X_START_LEFT + PIPE_WIDTH, yLower + ySpace, Y_TOP_LIMIT);
