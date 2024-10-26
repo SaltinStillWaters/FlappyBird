@@ -33,7 +33,13 @@ class Collision {
          */
         std::deque<Dimension*> pipes;
 
-        Collision() = default;
+        /**
+         * @param PIPE_WIDTH Width of a pipe.
+         * @param X_START_LEFT x-coordinate of the left side of pipes at point of creation.
+         * @param Y_BOT_LIMT y limit of bottom pipe. See figure above for more details.
+         * @param Y_TOP_LIMIT Same with Y_BOT_LIMIT but for the upper pipe. See figure above for more details
+         */
+        Collision(const float& PIPE_WIDTH, const float& X_START_LEFT = 1.0f, const float& Y_BOT_LIMIT = -1.0f, const float& Y_TOP_LIMIT = 1.0f);
         ~Collision();
 
         /**
@@ -56,7 +62,7 @@ class Collision {
         void update(const Dimension& bird, const float offsetof);
 
         /**
-         * Checks if there is a collision between the 'bird' and the nearest pipe
+         * Checks if there is a collision between the 'bird' and the nearest pipe or the upper and lower boundaries
          */
         bool checkCollision(Dimension bird);
 
@@ -64,22 +70,22 @@ class Collision {
         /**
          * x-coordinate of the left side of pipes at point of creation.
          */
-        const float X_START_LEFT = 1.0f;
+        const float X_START_LEFT;
 
         /**
          * Width of a pipe.
          */
-        const float PIPE_WIDTH = 0.2f;
+        const float PIPE_WIDTH;
 
         /**
          * y limit of bottom pipe. See figure above for more details.
          */
-        const float Y_BOT_LIMIT = -1.0f;
+        const float Y_BOT_LIMIT;
 
         /**
          * Same with Y_BOT_LIMIT but for the upper pipe. See figure above for more details
          */
-        const float Y_TOP_LIMIT = 1.0f;
+        const float Y_TOP_LIMIT;
 };
 
 #endif // COLLIDE_H

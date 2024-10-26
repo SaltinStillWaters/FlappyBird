@@ -34,7 +34,7 @@ class BirdHitbox {
          * The max y-speed it can reach.
          * It is a scalar, so no need to specify direction (sign).
          */
-        const float MAX_Y_SPD = 0.2;
+        const float MAX_Y_SPD = 0.1;
 
     public:
         /**

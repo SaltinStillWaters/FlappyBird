@@ -1,11 +1,15 @@
 #include "collision.h"
 
+
 Collision::~Collision() {
     while (!pipes.empty()) {
         delete (pipes.front());
         pipes.pop_front();
     }
 }
+
+Collision::Collision(const float& PIPE_WIDTH, const float& X_START_LEFT, const float& Y_BOT_LIMIT, const float& Y_TOP_LIMIT)
+                    : X_START_LEFT(X_START_LEFT), PIPE_WIDTH(PIPE_WIDTH), Y_BOT_LIMIT(Y_BOT_LIMIT), Y_TOP_LIMIT(Y_TOP_LIMIT) {}
 
 void Collision::createPipe(float yLower, float ySpace) {
     Dimension* pipeBot = new Dimension(X_START_LEFT, X_START_LEFT + PIPE_WIDTH, Y_BOT_LIMIT, yLower);
@@ -34,5 +38,6 @@ bool Collision::checkCollision(Dimension bird) {
         return false;
     }
 
-    return (bird.checkCollision(*pipes[0]) || bird.checkCollision(*pipes[1]));
+    return (bird.checkCollision(*pipes[0]) || bird.checkCollision(*pipes[1])
+            || bird.yBot <= Y_BOT_LIMIT || bird.yTop >= Y_TOP_LIMIT);
 }

@@ -12,13 +12,14 @@ void createTimer(int value);
 void updateTimer(int value);
 void keyBoardCheck(unsigned char key, int x, int y);
 
-BirdHitbox birdHitbox = BirdHitbox(Dimension(0.1, 0.2, 0.1, 0.0), -0.005);
-Collision collision;
+BirdHitbox birdHitbox = BirdHitbox(Dimension(0.1, 0.2, 0.1, 0.0), -0.001);
+Collision collision = Collision(0.2f);
 
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutCreateWindow("test");
+    glutInitWindowSize(1000, 800);
     glutDisplayFunc(display);
     glutKeyboardFunc(keyBoardCheck);
     glutTimerFunc(0, createTimer, 0);
@@ -31,7 +32,7 @@ int main(int argc, char** argv) {
 void keyBoardCheck(unsigned char key, int x, int y) {
     std::cout << "Key Pressed: " << key << '\n';
 
-    birdHitbox.jump(0.08);
+    birdHitbox.jump(0.05);
 }
 
 void display() {
@@ -63,7 +64,7 @@ void display() {
 
 void createTimer(int value) {
     float lowerY = (std::rand() % 101) / 100.0f;
-    collision.createPipe(lowerY, 0.3);
+    collision.createPipe(lowerY, 0.5);
     glutTimerFunc(3000, createTimer, 0);
 }
 
@@ -76,5 +77,5 @@ void updateTimer(int value) {
     birdHitbox.update();
     
     glutPostRedisplay();
-    glutTimerFunc(50, updateTimer, 0);
+    glutTimerFunc(30, updateTimer, 0);
 }
