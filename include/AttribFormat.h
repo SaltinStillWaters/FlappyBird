@@ -29,7 +29,7 @@ template <> inline void AttribFormat::addAttrib<GLfloat>(GLint count) {
 }
 
 template <> inline void AttribFormat::addAttrib<GLubyte>(GLint count) {
-    stride += count * sizeof(GLfloat);
+    stride += count * sizeof(GLubyte);
     attribs.push_back({count, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(GLubyte)});
 }
 
