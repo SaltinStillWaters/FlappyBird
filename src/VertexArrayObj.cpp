@@ -19,7 +19,7 @@ void VertexArrayObj::setAttribFormats(AttribFormat format) {
         glEnableVertexAttribArray(i);
         glVertexAttribPointer(i, attribs[i].count, attribs[i].type,
                               attribs[i].normalized, format.getStride(),
-                              (const void *) offset);
+                              (const void *)(intptr_t) offset);
         offset += attribs[i].count * attribs[i].size;
     }
 }
