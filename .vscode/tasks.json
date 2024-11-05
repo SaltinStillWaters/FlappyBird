@@ -6,7 +6,7 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "-std=c++11",
+                "-std=c++17",
                 "-I\"C:\\freeglut-MinGW-3.0.0-1.mp\\freeglut\\include\"",
                 "-L\"C:\\freeglut-MinGW-3.0.0-1.mp\\freeglut\\lib\\x64\"",
                 "-I\"C:\\glew-2.2.0-win32\\glew-2.2.0\\include\"",
