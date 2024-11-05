@@ -7,8 +7,10 @@ class BufferObj {
     protected:
         GLuint id;
         GLenum target;
+        GLenum usage;
     public:
-        BufferObj(const void *data, GLsizeiptr size, GLenum target = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW);
+        BufferObj(GLenum target, GLenum usage);
+        BufferObj(const void *data, GLsizeiptr size, GLenum target, GLenum usage);
         ~BufferObj();
         void bind() const;
         void unbind() const;
