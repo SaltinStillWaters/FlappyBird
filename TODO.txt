@@ -1,10 +1,7 @@
-
-- Add shader class
 - Add drawable object class
-- Use file reading to access vertex data for more organized code
+- Use file reading to access vertex data for more organized code (ArrayBuffer & IndexBuffer) (Notes can be found on .h files)
 
 - Restructure existing code for collisions to accomodate the new buffer systems
-
 
 MISC:
 * Add debug function to provide error messages in openGL
