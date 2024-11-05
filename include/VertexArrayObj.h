@@ -13,6 +13,7 @@ class VertexArrayObj {
         void bind() const;
         void unbind() const;
         void setAttribFormats(AttribFormat format);
+        void setAsMixedVertexData();
 };
 
 #endif

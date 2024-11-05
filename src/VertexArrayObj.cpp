@@ -1,5 +1,6 @@
 #include "VertexArrayObj.h"
 #include "AttribFormat.h"
+#include "MixedVertexData.h"
 
 #include <vector>
 
@@ -22,4 +23,13 @@ void VertexArrayObj::setAttribFormats(AttribFormat format) {
                               (const void *)(intptr_t) offset);
         offset += attribs[i].count * attribs[i].size;
     }
+}
+
+void VertexArrayObj::setAsMixedVertexData()
+{
+    bind();
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(MixedVertexData), (void*)offsetof(MixedVertexData, x));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(0, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(MixedVertexData), (void*)offsetof(MixedVertexData, r));
 }
