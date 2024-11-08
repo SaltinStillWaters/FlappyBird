@@ -1,81 +1,60 @@
-#include "collision.h"
-#include "birdHitbox.h"
-#include <GL/freeglut.h>
-#include <cstdlib>
+#include "GL/glew.h"
+#include "GL/freeglut.h"
+#include "BufferObj.h"
+#include "ArrayBuffer.h"
 #include <iostream>
-#include <deque>
-
-//NOTE: SAMPLE CODE TO TEST HITBOXES.
 
 void display();
-void createTimer(int value);
-void updateTimer(int value);
-void keyBoardCheck(unsigned char key, int x, int y);
+void init();
 
-BirdHitbox birdHitbox = BirdHitbox(Dimension(0.1, 0.2, 0.1, 0.0), -0.001);
-Collision collision = Collision(0.2f);
+int main(int argcp, char** argv) {
+    glutInit(&argcp, argv);
+    glutCreateWindow("Window");
 
+    if(glewInit() != GLEW_OK) {
+        std::cout << "Error iniitalizing glew";
+    }
 
-int main(int argc, char** argv) {
-    glutInit(&argc, argv);
-    glutCreateWindow("test");
-    glutInitWindowSize(1000, 800);
+    init();
     glutDisplayFunc(display);
-    glutKeyboardFunc(keyBoardCheck);
-    glutTimerFunc(0, createTimer, 0);
-    glutTimerFunc(0, updateTimer, 0);
     glutMainLoop();
-
     return 0;
 }
 
-void keyBoardCheck(unsigned char key, int x, int y) {
-    std::cout << "Key Pressed: " << key << '\n';
+unsigned int vao;
 
-    birdHitbox.jump(0.05);
+void init() {
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+    
+    ArrayBuffer birdBuffer("data/test.txt", GL_STATIC_DRAW);
+    birdBuffer.bind();
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+
+    glBindVertexArray(0);
+    birdBuffer.unbind();
+
+    /*
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    BufferObj birdBuffer(vertices, sizeof(vertices), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    birdBuffer.bind();
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+
+    glBindVertexArray(0);
+    birdBuffer.unbind();
+    */
 }
 
 void display() {
+    std::cout << "Hello World";
     glClear(GL_COLOR_BUFFER_BIT);
-    glBegin(GL_QUADS);
-        glColor3ub(255, 0, 0);
-
-        glVertex2f(birdHitbox.dimension.xLeft, birdHitbox.dimension.yTop);
-        glVertex2f(birdHitbox.dimension.xLeft, birdHitbox.dimension.yBot);
-        glVertex2f(birdHitbox.dimension.xRight, birdHitbox.dimension.yBot);
-        glVertex2f(birdHitbox.dimension.xRight, birdHitbox.dimension.yTop);
-
-        
-        glColor3ub(255, 255, 255);
-        
-        std::deque<Dimension*> pipes = collision.pipes;
-        for (int x = 0; x < pipes.size(); ++x) {
-            Dimension* pipe = pipes[x];
-
-            glVertex2f(pipe->xLeft, pipe->yTop);
-            glVertex2f(pipe->xLeft, pipe->yBot);
-            glVertex2f(pipe->xRight, pipe->yBot);
-            glVertex2f(pipe->xRight, pipe->yTop);
-        }
-
-    glEnd();
-    glFlush();
-}
-
-void createTimer(int value) {
-    float lowerY = (std::rand() % 101) / 100.0f;
-    collision.createPipe(lowerY, 0.5);
-    glutTimerFunc(3000, createTimer, 0);
-}
-
-void updateTimer(int value) {
-    collision.update(birdHitbox.dimension, -0.01f);
-    
-    if (collision.checkCollision(birdHitbox.dimension)) {
-        std::cout << "COLLISION!\n";
-    }
-    birdHitbox.update();
-    
-    glutPostRedisplay();
-    glutTimerFunc(30, updateTimer, 0);
+    glBindVertexArray(vao);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glutSwapBuffers();
 }

@@ -2,7 +2,7 @@
 #define ARRAYBUFFER_H
 
 #include <string>
-
+#include <vector>
 #include "BufferObj.h"
 
 // TODO:
@@ -18,6 +18,10 @@ class ArrayBuffer : public BufferObj {
                     GLenum usage)
             : BufferObj(data, size, GL_ARRAY_BUFFER, usage) {}
         ArrayBuffer(std::string filename, GLenum usage = GL_STATIC_DRAW);
+
+    private:
+        void fileToVector(std::vector<float>& vector, std::string filename);
+        void split(std::string s, char del, std::vector<float>& vector);
 };
 
 #endif
