@@ -1,11 +1,19 @@
-- Add drawable object class
-- Use file reading to access vertex data for more organized code (ArrayBuffer & IndexBuffer) (Notes can be found on .h files)
+----------------------------------------------------------------------------------------------------
+                                            TODO List:
+----------------------------------------------------------------------------------------------------
 
-- Restructure existing code for collisions to accomodate the new buffer systems
+> Add utility methods to DrawableObj class such as:
+    - shiftLeft/Right/Up/Down (for constant/linear transformation)
+        * make sure to add an increment variable if added (either internal or global)
 
-MISC:
-* Add debug function to provide error messages in openGL
+> Get pipe/bird vertices and/or indices
 
+> Implement collisions to DrawableObj class
+
+> Add debug function (Optional)
+    - see Module 8 page 39 for reference
+    - may be implemented in a .h file for cleanliness(?)
+        * only if deemed necessary
 
 //Mychal
 backend:
