@@ -1,36 +1,56 @@
-#include <vector>
 #include <fstream>
-#include <sstream>
 #include <iostream>
+#include <sstream>
+#include <vector>
+
 #include "ArrayBuffer.h"
 
-ArrayBuffer::ArrayBuffer(std::string filename, GLenum usage) : BufferObj(GL_ARRAY_BUFFER, usage) {
-    std::vector<float> vector;
+ArrayBuffer::ArrayBuffer(const std::string &filename, AttribFormat *format,
+                         GLenum usage)
+    : BufferObj(GL_ARRAY_BUFFER, usage) {
 
-    fileToVector(vector, filename);
-    for (int x = 0; x < vector.size(); ++x) {
-        std::cout << vector[x] << ' ';
-    }
+    ArrayBuffer::format = format;
 
-    glBindBuffer(target, id);
-    glBufferData(target, vector.size() * sizeof(float), vector.data(), usage);
-}
+    std::ifstream fileReader;
+    fileReader.open("data/" + filename);
+    if (!fileReader)
+        throw std::runtime_error("Vertex file not found");
 
-void ArrayBuffer::fileToVector(std::vector<float>& vector, std::string filename) {
-    std::ifstream file(filename);
+    std::vector<uint8_t> bufferData;
+
     std::string line;
+    std::stringstream vertexStream;
+    std::vector<GLenum> attribs = format->getAttributeOrder();
 
-    while(std::getline(file, line)) {
-        split(line, ' ', vector);
+    while (getline(fileReader, line)) {
+        vertexStream << line;
+        GLuint offset = 0;
+        uint8_t arr[format->getStride()] = {0};
+
+        for (GLenum attribName : attribs) {
+            Attrib attrib = format->getAttribute(attribName);
+            for (GLint i = 0; i < attrib.count; i++) {
+                if (attrib.type == GL_FLOAT) {
+                    GLfloat input;
+                    vertexStream >> input;
+                    memcpy(arr + offset, &input, sizeof(GLfloat));
+                } else if (attrib.type == GL_UNSIGNED_BYTE) {
+                    GLint temp;
+                    vertexStream >> temp;
+                    GLubyte input = (GLubyte)temp;
+                    memcpy(arr + offset, &input, sizeof(GLubyte));
+                } else
+                    std::runtime_error("Unsupported type.");
+                offset += attrib.size;
+            }
+        }
+        bufferData.insert(bufferData.end(), arr, arr + format->getStride());
+        vertexStream.clear();
+        count++;
     }
+
+    bind();
+    glBufferData(GL_ARRAY_BUFFER, bufferData.size(), bufferData.data(), usage);
 }
 
-void ArrayBuffer::split(std::string s, char del, std::vector<float>& vector) {
-    std::stringstream ss(s);
-    std::string word;
-
-    while (!ss.eof()) {
-        getline(ss, word, del);
-        vector.push_back(std::stof(word));
-    }
-}
+AttribFormat *ArrayBuffer::getFormat() { return format; }
