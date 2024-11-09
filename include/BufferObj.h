@@ -12,8 +12,6 @@ class BufferObj {
 
   public:
     BufferObj(GLenum target, GLenum usage);
-    BufferObj(const void *data, GLsizeiptr size, GLenum target, GLuint count,
-              GLenum usage);
     ~BufferObj();
     GLuint getCount() const;
     void bind() const;

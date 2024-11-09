@@ -13,7 +13,6 @@ class ArrayBuffer : public BufferObj {
   public:
     ArrayBuffer(const std::string &filename, AttribFormat *format,
                 GLenum usage = GL_STATIC_DRAW);
-    ArrayBuffer(const void *data, GLsizeiptr size, GLuint count, GLenum usage);
     AttribFormat *getFormat();
 };
 

@@ -8,7 +8,6 @@
 class IndexBuffer : public BufferObj {
   public:
     IndexBuffer(std::string filename, GLenum usage = GL_STATIC_DRAW);
-    IndexBuffer(const void *data, GLsizeiptr size, GLuint count, GLenum usage);
 };
 
 #endif

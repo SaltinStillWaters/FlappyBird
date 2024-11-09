@@ -23,7 +23,3 @@ IndexBuffer::IndexBuffer(std::string filename, GLenum usage)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint),
                  bufferData.data(), usage);
 }
-
-IndexBuffer::IndexBuffer(const void *data, GLsizeiptr size, GLuint count,
-                         GLenum usage)
-    : BufferObj(data, size, GL_ELEMENT_ARRAY_BUFFER, count, usage) {}

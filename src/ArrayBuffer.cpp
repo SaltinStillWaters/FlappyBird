@@ -53,7 +53,4 @@ ArrayBuffer::ArrayBuffer(const std::string &filename, AttribFormat *format,
     glBufferData(GL_ARRAY_BUFFER, bufferData.size(), bufferData.data(), usage);
 }
 
-ArrayBuffer::ArrayBuffer(const void *data, GLsizeiptr size, GLuint count, GLenum usage)
-        : BufferObj(data, size, GL_ARRAY_BUFFER, count, usage) {}
-
 AttribFormat *ArrayBuffer::getFormat() { return format; }
