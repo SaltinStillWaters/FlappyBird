@@ -1,3 +1,4 @@
+
 ---
 ***NOTE:***
 - *Most objects should be declared globally and dynamically to avoid unintended deletion of objects.*
@@ -13,7 +14,9 @@ To use the DrawableObj class, you must first specify the vertex format/s of your
 
 You can achieve this by:
 >`attribFormat = new AttribFormat();`
+
 >`attribFormat->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);`
+
 >`attribFormat->addAttrib<GLubyte>(3, GL_COLOR_ARRAY);`
 - The template parameter will specify the data type of the vertex attribute.
 - First method parameter is the number of components.
