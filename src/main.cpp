@@ -1,60 +1,76 @@
 #include "GL/glew.h"
-#include "GL/freeglut.h"
-#include "BufferObj.h"
-#include "ArrayBuffer.h"
+#include "GL/glut.h"
+
+#include "DrawableObj.h"
+
 #include <iostream>
 
 void display();
 void init();
+void idle();
+void cleanup();
 
-int main(int argcp, char** argv) {
+ArrayBuffer *buffer;
+IndexBuffer *ibuffer;
+DrawableObj *obj;
+AttribFormat *attribFormat;
+
+GLfloat rotate = 0.f;
+
+int main(int argcp, char **argv) {
     glutInit(&argcp, argv);
+    glutInitWindowSize(400, 400);
     glutCreateWindow("Window");
 
-    if(glewInit() != GLEW_OK) {
-        std::cout << "Error iniitalizing glew";
+    if (glewInit() != GLEW_OK) {
+        std::cout << "Cannot initialize GLEW." << std::endl;
     }
 
     init();
+
     glutDisplayFunc(display);
+    glutIdleFunc(idle);
     glutMainLoop();
+
+    cleanup();
     return 0;
 }
 
-unsigned int vao;
-
 void init() {
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    
-    ArrayBuffer birdBuffer("data/test.txt", GL_STATIC_DRAW);
-    birdBuffer.bind();
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+    attribFormat = new AttribFormat();
+    attribFormat->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
+    attribFormat->addAttrib<GLubyte>(3, GL_COLOR_ARRAY);
 
-    glBindVertexArray(0);
-    birdBuffer.unbind();
+    buffer = new ArrayBuffer("vertices.data", attribFormat);
+    ibuffer = new IndexBuffer("indices.data");
 
-    /*
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    BufferObj birdBuffer(vertices, sizeof(vertices), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-    birdBuffer.bind();
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-
-    glBindVertexArray(0);
-    birdBuffer.unbind();
-    */
+    obj = new DrawableObj(GL_QUADS, buffer, ibuffer);
 }
 
 void display() {
-    std::cout << "Hello World";
     glClear(GL_COLOR_BUFFER_BIT);
-    glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    glutSwapBuffers();
+
+    obj->draw();
+
+    glFlush();
+}
+
+void idle() {
+    obj->setRotation(rotate);
+    rotate += rotate >= 360.f ? -rotate : 1.f;
+    Sleep(1000 / 60);
+    glutPostRedisplay();
+}
+
+void cleanup() {
+    delete buffer;
+    delete ibuffer;
+    delete obj;
+    delete attribFormat;
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
 }
