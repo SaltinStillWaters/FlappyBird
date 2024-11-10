@@ -1,3 +1,11 @@
+create class for collisions.
+    - subclass drawableObj
+create class for collision checking
+    - has collision members
+use pointers
+
+
+testing code:
 #include "GL/glew.h"
 #include "GL/freeglut.h"
 #include "BufferObj.h"
