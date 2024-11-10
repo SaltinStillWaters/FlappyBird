@@ -1,10 +1,16 @@
-#include <algorithm>
-#include <iostream>
-
 #include "DrawableObj.h"
 
 GLfloat DrawableObj::screenWidth;
 GLfloat DrawableObj::screenHeight;
+
+bool DrawableObj::initialized = false;
+
+AttribFormat *DrawableObj::formatVertexOnly;
+AttribFormat *DrawableObj::formatVertexColor;
+
+DrawableObj::DrawableObjInit DrawableObj::initDrawableObj;
+
+DrawableObj::DrawableObj() {}
 
 DrawableObj::DrawableObj(GLenum drawMode, ArrayBuffer *vertices, bool fixed) {
     DrawableObj::drawMode = drawMode;
@@ -21,6 +27,26 @@ DrawableObj::DrawableObj(GLenum drawMode, ArrayBuffer *vertices,
 }
 
 DrawableObj::~DrawableObj() {}
+
+void DrawableObj::init() {
+    if (!initialized) {
+        DrawableObj::formatVertexColor = new AttribFormat();
+        DrawableObj::formatVertexOnly = new AttribFormat();
+        DrawableObj::formatVertexColor->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
+        DrawableObj::formatVertexColor->addAttrib<GLubyte>(3, GL_COLOR_ARRAY);
+        DrawableObj::formatVertexOnly->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
+        DrawableObj::initialized = true;
+    }
+}
+
+void DrawableObj::cleanup() {
+    if (initialized) {
+        delete DrawableObj::formatVertexColor;
+        delete DrawableObj::formatVertexOnly;
+        DrawableObj::formatVertexColor = nullptr;
+        DrawableObj::formatVertexOnly = nullptr;
+    }
+}
 
 void DrawableObj::setIndexBuffer(IndexBuffer *indices) {
     indexBuffer = indices;
@@ -51,22 +77,15 @@ void DrawableObj::setOffset(GLfloat x, GLfloat y) {
 
 void DrawableObj::setRotation(GLfloat angle) { rotation = angle; }
 
-void DrawableObj::setScale(GLfloat scale) {
-    DrawableObj::scale = scale;
-}
+void DrawableObj::setScale(GLfloat scale) { DrawableObj::scale = scale; }
 
-void DrawableObj::setFixed() {
-    fixedAspectRatio = true;
-}
+void DrawableObj::setFixed() { fixedAspectRatio = true; }
 
-void DrawableObj::setUnfixed() {
-    fixedAspectRatio = false;
-}
+void DrawableObj::setUnfixed() { fixedAspectRatio = false; }
 
 void DrawableObj::updateScreenDimens(GLfloat width, GLfloat height) {
     screenWidth = width;
     screenHeight = height;
-    // std:: cout << width << ' ' << height << '\n';
 }
 
 void DrawableObj::draw() {
@@ -91,10 +110,9 @@ void DrawableObj::draw() {
 
     glLoadIdentity();
 
-
-    if(fixedAspectRatio) {
+    if (fixedAspectRatio) {
         GLfloat minDimens = std::min(screenWidth, screenHeight);
-        glScalef(minDimens/screenWidth, minDimens/screenHeight, 1.f);
+        glScalef(minDimens / screenWidth, minDimens / screenHeight, 1.f);
     }
 
     glScalef(scale, scale, 1.f);

@@ -7,19 +7,34 @@
 
 class DrawableObj {
   protected:
+    static AttribFormat *formatVertexOnly;
+    static AttribFormat *formatVertexColor;
+
     static GLfloat screenWidth;
     static GLfloat screenHeight;
     GLfloat rotation = 0.f;
     GLfloat scale = 1.f;
     GLfloat xOffset = 0.f;
     GLfloat yOffset = 0.f;
-    GLsizei vertexCount = 0;
     ArrayBuffer *vertexBuffer = nullptr;
     IndexBuffer *indexBuffer = nullptr;
     ColorFloat plainColor = {0.f, 0.f, 0.f, 0.f};
     GLenum drawMode;
     bool fixedAspectRatio = false;
     bool plainColored = false;
+    DrawableObj();
+  private:
+    static bool initialized;
+    class DrawableObjInit {
+        public:
+            DrawableObjInit() {
+                DrawableObj::init();
+            }
+            ~DrawableObjInit() {
+                DrawableObj::cleanup();
+            }
+    };
+    static DrawableObjInit initDrawableObj;
 
     // TODO:
     // CollisionObj *collisionData;
@@ -29,6 +44,8 @@ class DrawableObj {
     DrawableObj(GLenum drawMode, ArrayBuffer *vertices, IndexBuffer *indices,
                 bool fixed = false);
     ~DrawableObj();
+    static void init();
+    static void cleanup();
     void setIndexBuffer(IndexBuffer *indices);
     void removeIndexBuffer();
     void setPlainColor(ColorUByte color);
