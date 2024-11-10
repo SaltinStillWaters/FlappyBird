@@ -10,8 +10,7 @@ class DrawableObj {
     static GLfloat screenWidth;
     static GLfloat screenHeight;
     GLfloat rotation = 0.f;
-    GLfloat xScale = 1.f;
-    GLfloat yScale = 1.f;
+    GLfloat scale = 1.f;
     GLfloat xOffset = 0.f;
     GLfloat yOffset = 0.f;
     GLsizei vertexCount = 0;
@@ -19,7 +18,7 @@ class DrawableObj {
     IndexBuffer *indexBuffer = nullptr;
     ColorFloat plainColor = {0.f, 0.f, 0.f, 0.f};
     GLenum drawMode;
-    bool fixedScale = false;
+    bool fixedAspectRatio = false;
     bool plainColored = false;
 
     // TODO:
@@ -37,7 +36,7 @@ class DrawableObj {
     void removePlainColor();
     void setOffset(GLfloat x, GLfloat y);
     void setRotation(GLfloat angle);
-    void setScale(GLfloat xScale, GLfloat yScale);
+    void setScale(GLfloat scale);
     void setFixed();
     void setUnfixed();
     static void updateScreenDimens(GLfloat width, GLfloat height);
