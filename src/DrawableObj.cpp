@@ -1,15 +1,23 @@
+#include <algorithm>
+#include <iostream>
+
 #include "DrawableObj.h"
 
-DrawableObj::DrawableObj(GLenum drawMode, ArrayBuffer *vertices) {
+GLfloat DrawableObj::screenWidth;
+GLfloat DrawableObj::screenHeight;
+
+DrawableObj::DrawableObj(GLenum drawMode, ArrayBuffer *vertices, bool fixed) {
     DrawableObj::drawMode = drawMode;
     vertexBuffer = vertices;
+    fixedScale = fixed;
 }
 
 DrawableObj::DrawableObj(GLenum drawMode, ArrayBuffer *vertices,
-                         IndexBuffer *indices) {
+                         IndexBuffer *indices, bool fixed) {
     DrawableObj::drawMode = drawMode;
     vertexBuffer = vertices;
     indexBuffer = indices;
+    fixedScale = fixed;
 }
 
 DrawableObj::~DrawableObj() {}
@@ -48,6 +56,20 @@ void DrawableObj::setScale(GLfloat xScale, GLfloat yScale) {
     DrawableObj::yScale = yScale;
 }
 
+void DrawableObj::setFixed() {
+    fixedScale = true;
+}
+
+void DrawableObj::setUnfixed() {
+    fixedScale = false;
+}
+
+void DrawableObj::updateScreenDimens(GLfloat width, GLfloat height) {
+    screenWidth = width;
+    screenHeight = height;
+    // std:: cout << width << ' ' << height << '\n';
+}
+
 void DrawableObj::draw() {
     vertexBuffer->bind();
     AttribFormat *attribs = vertexBuffer->getFormat();
@@ -70,8 +92,13 @@ void DrawableObj::draw() {
 
     glLoadIdentity();
     glTranslatef(xOffset, yOffset, 0.f);
-    glScalef(xScale, yScale, 1);
+    glScalef(xScale, yScale, 1.f);
     glRotatef(rotation, 0.f, 0.f, 1.f);
+
+    if(fixedScale) {
+        GLfloat minDimens = std::min(screenWidth, screenHeight);
+        glViewport((screenWidth - minDimens) / 2, (screenHeight - minDimens) / 2, minDimens, minDimens);
+    }
 
     if (indexBuffer != nullptr) {
         indexBuffer->bind();
@@ -82,5 +109,9 @@ void DrawableObj::draw() {
 
     if (plainColored) {
         glEnableClientState(GL_COLOR_ARRAY);
+    }
+
+    if(fixedScale) {
+        glViewport(0, 0, screenWidth, screenHeight);
     }
 }
