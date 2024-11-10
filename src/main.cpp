@@ -1,25 +1,22 @@
-#include "GL/glew.h"
-#include "GL/glut.h"
+#include <GL/glew.h>
+
+#include <GL/freeglut.h>
+#include <iostream>
 
 #include "DrawableObj.h"
+#include "SkyObj.h"
 
-#include <iostream>
+SkyObj sky;
 
 void display();
 void init();
 void idle();
 void reshape(int width, int height);
+void scroll(int button, int dir, int x, int y);
 void cleanup();
-
-ArrayBuffer *buffer;
-ArrayBuffer *buffer2;
-IndexBuffer *ibuffer;
-DrawableObj *obj;
-DrawableObj *bg;
-AttribFormat *attribFormat;
-AttribFormat *attribFormat2;
-
-GLfloat rotate = 0.f;
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
+                                GLenum severity, GLsizei length,
+                                const GLchar *message, const void *userParam);
 
 int main(int argcp, char **argv) {
     glutInit(&argcp, argv);
@@ -30,10 +27,13 @@ int main(int argcp, char **argv) {
         std::cout << "Cannot initialize GLEW." << std::endl;
     }
 
+    glDebugMessageCallback(MessageCallback, 0);
+
     init();
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
+    glutMouseWheelFunc(scroll);
     glutIdleFunc(idle);
     glutMainLoop();
 
@@ -41,38 +41,33 @@ int main(int argcp, char **argv) {
     return 0;
 }
 
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
+                                GLenum severity, GLsizei length,
+                                const GLchar *message, const void *userParam) {
+    fprintf(stderr,
+            "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
+            severity, message);
+}
+
 void init() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    attribFormat = new AttribFormat();
-    attribFormat->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
-    attribFormat->addAttrib<GLubyte>(3, GL_COLOR_ARRAY);
+    SkyObj::init();
 
-    attribFormat2 = new AttribFormat();
-    attribFormat2->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
-
-    buffer = new ArrayBuffer("vertices.data", attribFormat);
-    ibuffer = new IndexBuffer("indices.data");
-    buffer2 = new ArrayBuffer("bg.data", attribFormat2);
-
-    obj = new DrawableObj(GL_QUADS, buffer, ibuffer, true);
-    bg = new DrawableObj(GL_QUADS, buffer2);
-    bg->setPlainColor(ColorUByte({128, 0, 128, 255}));
+    sky = SkyObj();
 }
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    bg->draw();
-    obj->draw();
+    sky.draw();
 
     glFlush();
 }
 
 void idle() {
-    obj->setRotation(rotate);
-    rotate += rotate >= 360.f ? -rotate : 1.f;
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
@@ -82,15 +77,11 @@ void reshape(int width, int height) {
     DrawableObj::updateScreenDimens(width, height);
 }
 
-void cleanup() {
-    delete buffer;
-    delete buffer2;
-    delete ibuffer;
-    delete obj;
-    delete attribFormat;
-    delete attribFormat2;
-    delete bg;
+void scroll(int button, int dir, int x, int y) {
+    std::cout << dir << ' ' << x << ' ' << y << '\n';
+}
 
+void cleanup() {
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
 }
