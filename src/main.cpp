@@ -63,17 +63,25 @@ void display() {
 }
 
 void idle() {
+    obj->setRotation(rotate);
+    //rotate += rotate >= 360.f ? -rotate : 1.f;
+
     obj->setOffset(0, yOffSet);
-    if (isFlying) {
-        if (fly >= 0.5f) {
+
+    if (fly >= 0.5f) {
             isFlying = false;
             fly = 0;
-        }
-        yOffSet += 0.025f;
+    }
+
+    if (isFlying) {
+        rotate += rotate >= 45.f ? 0 : 2.f;
+        yOffSet += 0.015f;
         fly += 0.01f;
     } else {
-        yOffSet -= 0.025f;
+        rotate -= rotate <= -45.f ? 0 : 2.f;
+        yOffSet -= 0.015f;
     }
+    
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
