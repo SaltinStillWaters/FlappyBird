@@ -17,7 +17,6 @@ ArrayBuffer::ArrayBuffer(const std::string &filename, AttribFormat *format,
         throw std::runtime_error("Vertex file not found");
 
     std::vector<uint8_t> bufferData;
-
     std::string line;
     std::stringstream vertexStream;
     std::vector<GLenum> attribs = format->getAttributeOrder();
