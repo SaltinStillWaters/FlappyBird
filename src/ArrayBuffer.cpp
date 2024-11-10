@@ -8,14 +8,12 @@ ArrayBuffer::ArrayBuffer(std::string filename, GLenum usage) : BufferObj(GL_ARRA
     std::vector<float> vector;
 
     fileToVector(vector, filename);
-    for (int x = 0; x < vector.size(); ++x) {
-        std::cout << vector[x] << ' ';
-    }
 
     glBindBuffer(target, id);
     glBufferData(target, vector.size() * sizeof(float), vector.data(), usage);
 }
 
+//private:
 void ArrayBuffer::fileToVector(std::vector<float>& vector, std::string filename) {
     std::ifstream file(filename);
     std::string line;
