@@ -71,7 +71,7 @@ void display() {
 
 void idle() {
     obj->setRotation(rotate);
-    obj->setOffset(0, yOffSet);
+    obj->setOffset(-0.5, yOffSet);
 
     if (fly >= 0.35f) {
             isFlying = false;
