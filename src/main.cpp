@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "DrawableObj.h"
+#include "SkyHelpers.h"
 
 DrawableObj *sky;
 DrawableObj *box;
@@ -69,7 +70,7 @@ void init() {
     box2 = DrawableObj::create("square");
     sky = DrawableObj::create("sky");
     box2->setScale(0.5);
-    box2->setOffset(0.5, 0.5);
+    box2->setOffset(1, 1);
 }
 
 void display() {
@@ -97,12 +98,12 @@ void reshape(int width, int height) {
         w = h * 16.f / 9.f;
     else if (w / h < 16.f / 9.f)
         h = w * 9.f / 16.f;
-    glViewport(((GLfloat) width - w) / 2.f, ((GLfloat) height - h) / 2.f, w, h);
+    glViewport(((GLfloat)width - w) / 2.f, ((GLfloat)height - h) / 2.f, w, h);
     DrawableObj::updateScreenDimens(w, h);
 }
 
 void scroll(int button, int dir, int x, int y) {
-    std::cout << dir << ' ' << x << ' ' << y << '\n';
+    updateSkyColors(sky->getVertexBuffer());
 }
 
 void cleanup() {
