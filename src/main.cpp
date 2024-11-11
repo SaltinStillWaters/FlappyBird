@@ -4,9 +4,11 @@
 #include <iostream>
 
 #include "DrawableObj.h"
-#include "SkyObj.h"
 
-SkyObj sky;
+DrawableObj *box;
+DrawableObj *box2;
+
+GLfloat rotate = 0.f;
 
 void display();
 void init();
@@ -28,6 +30,7 @@ int main(int argcp, char **argv) {
     }
 
     glDebugMessageCallback(MessageCallback, 0);
+    glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
     init();
 
@@ -35,9 +38,11 @@ int main(int argcp, char **argv) {
     glutReshapeFunc(reshape);
     glutMouseWheelFunc(scroll);
     glutIdleFunc(idle);
+
     glutMainLoop();
 
     cleanup();
+
     return 0;
 }
 
@@ -54,20 +59,28 @@ void init() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    SkyObj::init();
+    DrawableObj::type("square", GL_QUADS, "vertices.data",
+                      &DrawableObj::formatVertexColor);
 
-    sky = SkyObj();
+    box = DrawableObj::create("square");
+    box2 = DrawableObj::create("square");
+    box2->setScale(0.5);
+    box2->setOffset(0.5, 0.5);
 }
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
-
-    sky.draw();
-
+    box->draw();
+    box2->draw();
     glFlush();
 }
 
 void idle() {
+    rotate += 1.f;
+    if(rotate >= 360.f)
+        rotate = 0.f;
+    box->setRotation(rotate);
+    box2->setRotation(rotate);
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
@@ -82,6 +95,9 @@ void scroll(int button, int dir, int x, int y) {
 }
 
 void cleanup() {
+    delete box;
+    delete box2;
+
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
 }
