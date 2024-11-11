@@ -2,13 +2,13 @@
 
 #include <GL/freeglut.h>
 #include <iostream>
-
+#include "Pipes.cpp"
 #include "DrawableObj.h"
 
 DrawableObj *sky;
 DrawableObj *box;
 DrawableObj *box2;
-
+Pipes* pipes;
 GLfloat rotate = 0.f;
 
 void display();
@@ -65,6 +65,8 @@ void init() {
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
                       &DrawableObj::formatVertexColor, false);
 
+    pipes = new Pipes("topPipe.data", "botPipe.data", -0.01);
+    pipes->createPipe();
     box = DrawableObj::create("square");
     box2 = DrawableObj::create("square");
     sky = DrawableObj::create("sky");
@@ -77,6 +79,27 @@ void display() {
     sky->draw();
     box->draw();
     box2->draw();
+    pipes->draw();
+
+//     // Disable vertex and color arrays
+// glDisableClientState(GL_VERTEX_ARRAY);
+// glDisableClientState(GL_COLOR_ARRAY);
+// glLoadIdentity();
+// // Set the color for the box (for example, red)
+// glColor3f(1.0f, 0.0f, 0.0f); 
+
+// // Draw the box using immediate mode (GL_QUADS)
+// glBegin(GL_QUADS);
+//     glVertex2f(0.9, 0.5f);  // Top Left
+//     glVertex2f(1.5f, 0.5f);   // Top Right
+//     glVertex2f(1.5f, -0.5f);  // Bottom Right
+//     glVertex2f(0.9, -0.5f); // Bottom Left
+// glEnd();
+
+// Re-enable vertex and color arrays
+// glEnableClientState(GL_VERTEX_ARRAY);
+// glEnableClientState(GL_COLOR_ARRAY);
+
     glFlush();
 }
 
@@ -86,6 +109,7 @@ void idle() {
         rotate = 0.f;
     box->setRotation(rotate);
     box2->setRotation(rotate);
+    pipes->updatePipes();
     Sleep(1000 / 60);
     glutPostRedisplay();
 }

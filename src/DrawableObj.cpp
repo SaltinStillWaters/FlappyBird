@@ -65,6 +65,14 @@ void DrawableObj::type(std::string name, GLenum drawMode,
         new IndexBuffer(indexFilename, indexUsage), drawMode, normalizedCoords};
 }
 
+GLfloat DrawableObj::getXOffset() {
+    return xOffset;
+}
+
+GLfloat DrawableObj::getYOffset() {
+    return yOffset;
+}
+
 DrawableObj *DrawableObj::create(std::string name) {
     if (DrawableObj::typeTemplates.find(name) ==
         DrawableObj::typeTemplates.end())
