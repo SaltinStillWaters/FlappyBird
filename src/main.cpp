@@ -10,6 +10,7 @@ void init();
 void idle();
 void cleanup();
 void jump(int key, int state, int x, int y);
+
 ArrayBuffer *buffer;
 IndexBuffer *ibuffer;
 DrawableObj *obj;
@@ -19,13 +20,14 @@ GLfloat rotate = 0.f;
 GLfloat yOffSet = 0.f; 
 GLfloat fly = 0.f;
 bool isFlying = false;
-const GLfloat MAX_FLIGHT_HEIGHT = 1.0f;
-const GLfloat MIN_FLIGHT_HEIGHT = -1.0f;
+const GLfloat MAX_FLIGHT_HEIGHT = 1.85f;
+const GLfloat MIN_FLIGHT_HEIGHT = -0.95f;
+const GLfloat GRAVITY = 9.81f;
 
 
 int main(int argcp, char **argv) {
     glutInit(&argcp, argv);
-    glutInitWindowSize(400, 500);
+    glutInitWindowSize(900, 900);
     glutCreateWindow("Window");
 
     if (glewInit() != GLEW_OK) {
@@ -55,6 +57,8 @@ void init() {
     // ibuffer = new IndexBuffer("indices.data");
 
     obj = new DrawableObj(GL_QUADS, buffer);
+    obj->setScale(0.15f, 0.15f);
+
 }
 
 void display() {
@@ -67,11 +71,9 @@ void display() {
 
 void idle() {
     obj->setRotation(rotate);
-    
-
     obj->setOffset(0, yOffSet);
 
-    if (fly >= 0.5f) {
+    if (fly >= 0.35f) {
             isFlying = false;
             fly = 0;
     }
@@ -79,17 +81,18 @@ void idle() {
     if (isFlying) {
         if(yOffSet < MAX_FLIGHT_HEIGHT -1.0f){
             rotate += rotate >= 45.f ? 0 : 3.f;
-            yOffSet += 0.015f;
+            yOffSet += 0.0015f * GRAVITY;
         }
         fly += 0.01f;
     } else {                       
         if(yOffSet > MIN_FLIGHT_HEIGHT){
+            Sleep(1000 / 60);
             rotate -= rotate <= -45.f ? 0 : 3.f;
-            yOffSet -= 0.02;
+            yOffSet -= 0.005 * GRAVITY;
         }
     }
     
-    Sleep(1000 / 120);
+    Sleep(1000 / 60);
     glutPostRedisplay();
 }
 
