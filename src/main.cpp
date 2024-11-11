@@ -5,6 +5,7 @@
 
 #include "DrawableObj.h"
 
+DrawableObj *sky;
 DrawableObj *box;
 DrawableObj *box2;
 
@@ -61,15 +62,19 @@ void init() {
 
     DrawableObj::type("square", GL_QUADS, "vertices.data",
                       &DrawableObj::formatVertexColor);
+    DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
+                      &DrawableObj::formatVertexColor, false);
 
     box = DrawableObj::create("square");
     box2 = DrawableObj::create("square");
+    sky = DrawableObj::create("sky");
     box2->setScale(0.5);
     box2->setOffset(0.5, 0.5);
 }
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
+    sky->draw();
     box->draw();
     box2->draw();
     glFlush();
@@ -77,7 +82,7 @@ void display() {
 
 void idle() {
     rotate += 1.f;
-    if(rotate >= 360.f)
+    if (rotate >= 360.f)
         rotate = 0.f;
     box->setRotation(rotate);
     box2->setRotation(rotate);
@@ -86,8 +91,14 @@ void idle() {
 }
 
 void reshape(int width, int height) {
-    glViewport(0, 0, width, height);
-    DrawableObj::updateScreenDimens(width, height);
+    GLfloat w = width;
+    GLfloat h = height;
+    if (w / h > 16.f / 9.f)
+        w = h * 16.f / 9.f;
+    else if (w / h < 16.f / 9.f)
+        h = w * 9.f / 16.f;
+    glViewport(((GLfloat) width - w) / 2.f, ((GLfloat) height - h) / 2.f, w, h);
+    DrawableObj::updateScreenDimens(w, h);
 }
 
 void scroll(int button, int dir, int x, int y) {
@@ -95,6 +106,7 @@ void scroll(int button, int dir, int x, int y) {
 }
 
 void cleanup() {
+    delete sky;
     delete box;
     delete box2;
 
