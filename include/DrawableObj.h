@@ -9,18 +9,13 @@ class DrawableObj {
   protected:
     struct DrawableObjTemplate;
     static std::unordered_map<std::string, DrawableObjTemplate> typeTemplates;
-
     static GLfloat screenWidth;
     static GLfloat screenHeight;
     GLfloat rotation = 0.f;
     GLfloat scale = 1.f;
     GLfloat xOffset = 0.f;
     GLfloat yOffset = 0.f;
-
-  public:
     ArrayBuffer *vertexBuffer = nullptr;
-
-  protected:
     IndexBuffer *indexBuffer = nullptr;
     ColorFloat plainColor = {0.f, 0.f, 0.f, 0.f};
     GLenum drawMode;
@@ -54,6 +49,7 @@ class DrawableObj {
                      GLenum indexUsage = GL_STATIC_DRAW);
     static DrawableObj *create(std::string name);
     static void updateScreenDimens(GLfloat width, GLfloat height);
+    ArrayBuffer* getVertexBuffer();
     void setIndexBuffer(IndexBuffer *indices);
     void removeIndexBuffer();
     void setPlainColor(ColorUByte color);
