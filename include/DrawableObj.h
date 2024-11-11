@@ -7,8 +7,8 @@
 
 class DrawableObj {
   protected:
-    static AttribFormat *formatVertexOnly;
-    static AttribFormat *formatVertexColor;
+    struct DrawableObjTemplate;
+    static std::unordered_map<std::string, DrawableObjTemplate> typeTemplates;
 
     static GLfloat screenWidth;
     static GLfloat screenHeight;
@@ -16,36 +16,44 @@ class DrawableObj {
     GLfloat scale = 1.f;
     GLfloat xOffset = 0.f;
     GLfloat yOffset = 0.f;
+
+  public:
     ArrayBuffer *vertexBuffer = nullptr;
+
+  protected:
     IndexBuffer *indexBuffer = nullptr;
     ColorFloat plainColor = {0.f, 0.f, 0.f, 0.f};
     GLenum drawMode;
-    bool fixedAspectRatio = false;
+    bool normalizedCoords = true;
     bool plainColored = false;
-    DrawableObj();
+    DrawableObj(GLenum drawMode, ArrayBuffer *vertices, IndexBuffer *indices,
+                bool normalized = true);
+
   private:
     static bool initialized;
     class DrawableObjInit {
-        public:
-            DrawableObjInit() {
-                DrawableObj::init();
-            }
-            ~DrawableObjInit() {
-                DrawableObj::cleanup();
-            }
+      public:
+        DrawableObjInit() { DrawableObj::init(); }
+        ~DrawableObjInit() { DrawableObj::cleanup(); }
     };
     static DrawableObjInit initDrawableObj;
 
-    // TODO:
-    // CollisionObj *collisionData;
-
   public:
-    DrawableObj(GLenum drawMode, ArrayBuffer *vertices, bool fixed = false);
-    DrawableObj(GLenum drawMode, ArrayBuffer *vertices, IndexBuffer *indices,
-                bool fixed = false);
-    ~DrawableObj();
+    static AttribFormat formatVertexOnly;
+    static AttribFormat formatVertexColor;
     static void init();
     static void cleanup();
+    static void type(std::string name, GLenum drawMode,
+                     std::string vertexFilename, AttribFormat *attribFormat,
+                     bool normalizedCoords = true,
+                     GLenum vertexUsage = GL_STATIC_DRAW);
+    static void type(std::string name, GLenum drawMode,
+                     std::string vertexFilename, AttribFormat *attribFormat,
+                     std::string indexFilename, bool normalizedCoords = true,
+                     GLenum vertexUsage = GL_STATIC_DRAW,
+                     GLenum indexUsage = GL_STATIC_DRAW);
+    static DrawableObj *create(std::string name);
+    static void updateScreenDimens(GLfloat width, GLfloat height);
     void setIndexBuffer(IndexBuffer *indices);
     void removeIndexBuffer();
     void setPlainColor(ColorUByte color);
@@ -56,7 +64,6 @@ class DrawableObj {
     void setScale(GLfloat scale);
     void setFixed();
     void setUnfixed();
-    static void updateScreenDimens(GLfloat width, GLfloat height);
     void draw();
 };
 
