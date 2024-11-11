@@ -19,10 +19,13 @@ GLfloat rotate = 0.f;
 GLfloat yOffSet = 0.f; 
 GLfloat fly = 0.f;
 bool isFlying = false;
+const GLfloat MAX_FLIGHT_HEIGHT = 1.0f;
+const GLfloat MIN_FLIGHT_HEIGHT = -1.0f;
+
 
 int main(int argcp, char **argv) {
     glutInit(&argcp, argv);
-    glutInitWindowSize(400, 400);
+    glutInitWindowSize(400, 500);
     glutCreateWindow("Window");
 
     if (glewInit() != GLEW_OK) {
@@ -74,12 +77,16 @@ void idle() {
     }
 
     if (isFlying) {
-        rotate += rotate >= 45.f ? 0 : 3.f;
-        yOffSet += 0.015f;
+        if(yOffSet < MAX_FLIGHT_HEIGHT -1.0f){
+            rotate += rotate >= 45.f ? 0 : 3.f;
+            yOffSet += 0.015f;
+        }
         fly += 0.01f;
-    } else {
-        rotate -= rotate <= -45.f ? 0 : 3.f;
-        yOffSet -= 0.02;
+    } else {                       
+        if(yOffSet > MIN_FLIGHT_HEIGHT){
+            rotate -= rotate <= -45.f ? 0 : 3.f;
+            yOffSet -= 0.02;
+        }
     }
     
     Sleep(1000 / 120);
