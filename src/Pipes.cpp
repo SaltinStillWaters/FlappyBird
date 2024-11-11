@@ -1,4 +1,5 @@
 #include "DrawableObj.h"
+#include "Hitbox.h"
 #include "ArrayBuffer.h"
 #include <deque>
 #include <string>
@@ -8,6 +9,7 @@
 class Pipes {
     public:
     std::deque<DrawableObj*> pipes;
+    std::deque<Hitbox*> hitboxes;
 
     ArrayBuffer* topPipeVBO;
     ArrayBuffer* botPipeVBO;
@@ -41,14 +43,26 @@ class Pipes {
         GLfloat yOffset = (*distrib)(*randMt) / 50.f;
 
         pipes.push_back(DrawableObj::create("botPipe"));
+        hitboxes.push_back(new Hitbox(1, 1.388, -1, 1));
     }
 
     void reshape(int screenWidth, int screenHeight) {
+        for (Hitbox* hitbox : hitboxes) {
+            hitbox->updateX(this->xDisplacement);
+        }
     }
 
     void updatePipes() {
         for (DrawableObj* obj : pipes) {
             obj->setOffset(obj->getXOffset() + this->xDisplacement, obj->getYOffset());
+        }
+
+        for (Hitbox* hitbox : hitboxes) {
+            hitbox->updateX(this->xDisplacement);
+            std::cout << "xLeft=" << hitbox->xLeft << ", "
+              << "xRight=" << hitbox->xRight << ", "
+              << "yTop=" << hitbox->yTop << ", "
+              << "yBot=" << hitbox->yBot << std::endl << std::endl;
         }
 
         // if (pipes.size() >= 2 && pipes[0]->getXOffset() < -3.5f) {

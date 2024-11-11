@@ -21,7 +21,7 @@ void Hitbox::reshape(int width, int height) {
     this->yTop *= min/height;
     this->yBot *= min/height;
     
-    pipeWidth *= min/width;
+    //pipeWidth *= min/width;
 }
 
 bool Hitbox::checkCollision(const Hitbox& hitbox) {

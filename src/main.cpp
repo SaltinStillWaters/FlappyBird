@@ -123,6 +123,7 @@ void reshape(int width, int height) {
         h = w * 9.f / 16.f;
     glViewport(((GLfloat) width - w) / 2.f, ((GLfloat) height - h) / 2.f, w, h);
     DrawableObj::updateScreenDimens(w, h);
+    pipes->reshape(w, h);
 }
 
 void scroll(int button, int dir, int x, int y) {
