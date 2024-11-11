@@ -145,13 +145,13 @@ void DrawableObj::draw() {
     }
 
     glLoadIdentity();
+    glTranslatef(xOffset, yOffset, 0.f);
 
     if (normalizedCoords) {
         GLfloat minDimens = std::min(screenWidth, screenHeight);
         glScalef(minDimens / screenWidth, minDimens / screenHeight, 1.f);
     }
 
-    glTranslatef(xOffset, yOffset, 0.f);
     glScalef(scale, scale, 1.f);
     glRotatef(rotation, 0.f, 0.f, 1.f);
 
