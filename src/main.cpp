@@ -30,7 +30,7 @@ int main(int argcp, char **argv) {
     }
 
     init();
-
+    //glutFullScreen(); 
     glutDisplayFunc(display);
     glutIdleFunc(idle);
     glutMouseFunc(jump);
@@ -64,7 +64,7 @@ void display() {
 
 void idle() {
     obj->setRotation(rotate);
-    //rotate += rotate >= 360.f ? -rotate : 1.f;
+    
 
     obj->setOffset(0, yOffSet);
 
@@ -74,17 +74,18 @@ void idle() {
     }
 
     if (isFlying) {
-        rotate += rotate >= 45.f ? 0 : 2.f;
+        rotate += rotate >= 45.f ? 0 : 3.f;
         yOffSet += 0.015f;
         fly += 0.01f;
     } else {
-        rotate -= rotate <= -45.f ? 0 : 2.f;
-        yOffSet -= 0.015f;
+        rotate -= rotate <= -45.f ? 0 : 3.f;
+        yOffSet -= 0.02;
     }
     
-    Sleep(1000 / 60);
+    Sleep(1000 / 120);
     glutPostRedisplay();
 }
+
 
 
 void jump(int key, int state, int x, int y){
