@@ -1,18 +1,80 @@
 #include "DrawableObj.h"
+#include <iostream>
 
-DrawableObj::DrawableObj(GLenum drawMode, ArrayBuffer *vertices) {
-    DrawableObj::drawMode = drawMode;
-    vertexBuffer = vertices;
-}
+struct DrawableObj::DrawableObjTemplate {
+    ArrayBuffer *vertices;
+    IndexBuffer *indices;
+    GLenum drawMode;
+    bool normalizedCoords = true;
+};
+
+std::unordered_map<std::string, DrawableObj::DrawableObjTemplate>
+    DrawableObj::typeTemplates;
+
+GLfloat DrawableObj::screenWidth;
+GLfloat DrawableObj::screenHeight;
+
+bool DrawableObj::initialized = false;
+
+AttribFormat DrawableObj::formatVertexOnly;
+AttribFormat DrawableObj::formatVertexColor;
+
+DrawableObj::DrawableObjInit DrawableObj::initDrawableObj;
 
 DrawableObj::DrawableObj(GLenum drawMode, ArrayBuffer *vertices,
-                         IndexBuffer *indices) {
+                         IndexBuffer *indices, bool normalized) {
     DrawableObj::drawMode = drawMode;
     vertexBuffer = vertices;
     indexBuffer = indices;
+    normalizedCoords = normalized;
 }
 
-DrawableObj::~DrawableObj() {}
+void DrawableObj::init() {
+    if (!initialized) {
+        DrawableObj::formatVertexColor.addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
+        DrawableObj::formatVertexColor.addAttrib<GLubyte>(3, GL_COLOR_ARRAY);
+        DrawableObj::formatVertexOnly.addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
+        DrawableObj::initialized = true;
+    }
+}
+
+void DrawableObj::cleanup() {
+    for (auto &element : DrawableObj::typeTemplates) {
+        std::cout << "Deleting " << element.first << '\n';
+        delete element.second.vertices;
+        element.second.vertices = nullptr;
+        delete element.second.indices;
+        element.second.indices = nullptr;
+    }
+}
+
+void DrawableObj::type(std::string name, GLenum drawMode,
+                       std::string vertexFilename, AttribFormat *attribFormat,
+                       bool normalizedCoords, GLenum vertexUsage) {
+    DrawableObj::typeTemplates[name] = {
+        new ArrayBuffer(vertexFilename, attribFormat, vertexUsage), nullptr,
+        drawMode, normalizedCoords};
+}
+
+void DrawableObj::type(std::string name, GLenum drawMode,
+                       std::string vertexFilename, AttribFormat *attribFormat,
+                       std::string indexFilename, bool normalizedCoords,
+                       GLenum vertexUsage, GLenum indexUsage) {
+    DrawableObj::typeTemplates[name] = {
+        new ArrayBuffer(vertexFilename, attribFormat, vertexUsage),
+        new IndexBuffer(indexFilename, indexUsage), drawMode, normalizedCoords};
+}
+
+DrawableObj *DrawableObj::create(std::string name) {
+    if (DrawableObj::typeTemplates.find(name) ==
+        DrawableObj::typeTemplates.end())
+        return nullptr;
+
+    DrawableObj::DrawableObjTemplate *typeData =
+        &DrawableObj::typeTemplates[name];
+    return new DrawableObj(typeData->drawMode, typeData->vertices,
+                           typeData->indices, typeData->normalizedCoords);
+}
 
 void DrawableObj::setIndexBuffer(IndexBuffer *indices) {
     indexBuffer = indices;
@@ -43,10 +105,26 @@ void DrawableObj::setOffset(GLfloat x, GLfloat y) {
 
 void DrawableObj::setRotation(GLfloat angle) { rotation = angle; }
 
-void DrawableObj::setScale(GLfloat xScale, GLfloat yScale) {
-    DrawableObj::xScale = xScale;
-    DrawableObj::yScale = yScale;
+void DrawableObj::setScale(GLfloat scale) { DrawableObj::scale = scale; }
+
+void DrawableObj::setFixed() { normalizedCoords = true; }
+
+void DrawableObj::setUnfixed() { normalizedCoords = false; }
+
+GLfloat DrawableObj::getXOffset() {
+    return xOffset;
 }
+
+GLfloat DrawableObj::getYOffset() {
+    return yOffset;
+}
+
+void DrawableObj::updateScreenDimens(GLfloat width, GLfloat height) {
+    screenWidth = width;
+    screenHeight = height;
+}
+
+ArrayBuffer *DrawableObj::getVertexBuffer() { return vertexBuffer; }
 
 void DrawableObj::draw() {
     vertexBuffer->bind();
@@ -68,9 +146,16 @@ void DrawableObj::draw() {
         glColor4f(plainColor.r, plainColor.g, plainColor.b, plainColor.a);
     }
 
+    glPushMatrix();
     glLoadIdentity();
     glTranslatef(xOffset, yOffset, 0.f);
-    glScalef(xScale, yScale, 1);
+
+    if (normalizedCoords) {
+        GLfloat minDimens = std::min(screenWidth, screenHeight);
+        glScalef(minDimens / screenWidth, minDimens / screenHeight, 1.f);
+    }
+
+    glScalef(scale, scale, 1.f);
     glRotatef(rotation, 0.f, 0.f, 1.f);
 
     if (indexBuffer != nullptr) {
@@ -83,4 +168,6 @@ void DrawableObj::draw() {
     if (plainColored) {
         glEnableClientState(GL_COLOR_ARRAY);
     }
+
+    glPopMatrix();
 }
