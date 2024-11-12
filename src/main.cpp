@@ -1,3 +1,9 @@
+//<<<<<<< birdUpdate_2
+#include "GL/glew.h"
+#include "GL/glut.h"
+#include "Bird.h"
+#include <iostream>
+//=======
 #include <GL/glew.h>
 
 #include <GL/freeglut.h>
@@ -11,6 +17,7 @@ DrawableObj *box;
 DrawableObj *box2;
 Pipes* pipes;
 GLfloat rotate = 0.f;
+//>>>>>>> master_copy
 
 void display();
 void init();
@@ -18,13 +25,20 @@ void idle();
 void reshape(int width, int height);
 void scroll(int button, int dir, int x, int y);
 void cleanup();
+//<<<<<<< birdUpdate_2
+void jump(int key, int state, int x, int y);
+
+ArrayBuffer* buffer;
+Bird* bird;
+//=======
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 GLenum severity, GLsizei length,
                                 const GLchar *message, const void *userParam);
+//>>>>>>> master_copy
 
 int main(int argcp, char **argv) {
     glutInit(&argcp, argv);
-    glutInitWindowSize(400, 400);
+    glutInitWindowSize(900, 900);
     glutCreateWindow("Window");
 
     if (glewInit() != GLEW_OK) {
@@ -35,12 +49,15 @@ int main(int argcp, char **argv) {
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
     init();
-
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutMouseWheelFunc(scroll);
     glutIdleFunc(idle);
+//<<<<<<< birdUpdate_2
+    glutMouseFunc(jump);
+//=======
 
+//>>>>>>> master_copy
     glutMainLoop();
 
     cleanup();
@@ -61,6 +78,15 @@ void init() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
+//<<<<<<< birdUpdate_2
+    AttribFormat* attribFormat = new AttribFormat();
+    attribFormat->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
+    attribFormat->addAttrib<GLfloat>(4, GL_COLOR_ARRAY);
+
+    buffer = new ArrayBuffer("bird.data", attribFormat);
+    bird = new Bird(GL_QUADS, buffer);
+    bird->setScale(0.15f, 0.15f);
+//=======
     DrawableObj::type("square", GL_QUADS, "vertices.data",
                       &DrawableObj::formatVertexColor);
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
@@ -73,10 +99,31 @@ void init() {
     sky = DrawableObj::create("sky");
     box2->setScale(0.5);
     box2->setOffset(0.5, 0.5);
+//>>>>>>> master_copy
 }
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
+//<<<<<<< birdUpdate_2
+    bird->draw(); 
+    glutSwapBuffers();
+}
+
+void idle() {
+    bird->update(); 
+    glutPostRedisplay();
+}
+
+void jump(int key, int state, int x, int y) {
+    if (key == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        bird->jump();
+    }
+}
+
+void cleanup() {
+    delete buffer;
+    delete bird;
+//=======
     sky->draw();
     box->draw();
     box2->draw();
@@ -118,6 +165,7 @@ void cleanup() {
     delete sky;
     delete box;
     delete box2;
+//>>>>>>> master_copy
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
