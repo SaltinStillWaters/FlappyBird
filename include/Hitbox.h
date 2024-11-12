@@ -13,13 +13,12 @@ class Hitbox {
 
         Hitbox(float xLeft, float xRight, float yBot, float yTop);
 
-        bool checkCollision(const Hitbox& hitbox);
-        void reshape(int width, int height);
+        bool checkCollision(const Hitbox& hitbox) const;
         void updateX(float offset);
 
     private:
-        bool checkXCollision(const Hitbox& hitbox);
-        bool checkYCollision(const Hitbox& hitbox);
+        bool checkXCollision(const Hitbox& hitbox) const;
+        bool checkYCollision(const Hitbox& hitbox) const;
 };
 
 

@@ -1,93 +1,79 @@
-#include "DrawableObj.h"
-#include "Hitbox.h"
-#include "ArrayBuffer.h"
-#include <deque>
-#include <string>
+#include "Pipes.h"
 #include <iostream>
-#include <random>
 
-class Pipes {
-    public:
-    std::deque<DrawableObj*> pipes;
-    std::deque<Hitbox*> hitboxes;
+unsigned int Pipes::updateCount = Pipes::updatesNeeded;
 
-    ArrayBuffer* topPipeVBO;
-    ArrayBuffer* botPipeVBO;
-    GLfloat xDisplacement;
-    const GLfloat ySpace;
-    
-    private:
-    std::mt19937* randMt;
-    std::uniform_int_distribution<int>* distrib;
+Pipes::Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace)
+    : xDisplacement(xDisplacement), ySpace(ySpace) {
+    //Can be made to a parameter
+    AttribFormat* format = new AttribFormat();
+    format->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
+    format->addAttrib<GLubyte>(3, GL_COLOR_ARRAY);
 
-    public:
-    Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, GLfloat xDisplacement, const GLfloat& ySpace = 0.3)
-        : xDisplacement(xDisplacement), ySpace(ySpace) {
-        
-        //AttribFormat may be moved to parameter list
-        AttribFormat* format = new AttribFormat();
-        format->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
-        format->addAttrib<GLubyte>(3, GL_COLOR_ARRAY);
-        
-        DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, format, false);
-        DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, format, false);
+    DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, format, false);
+    DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, format, false);
 
-        randMt = new std::mt19937 { std::random_device{}() };
-        distrib = new std::uniform_int_distribution<int> { 20, 80 }; //min height of pipes is 20% of the window's height
+    randMt = new std::mt19937 { std::random_device{}() };
+    distrib = new std::uniform_int_distribution<int> { 20, 80 };
+}
+
+void Pipes::createPipe() {
+    if (Pipes::updateCount < updatesNeeded) {
+        ++Pipes::updateCount;
+        return;
     }
+    Pipes::updateCount = 0;
 
-    void createPipe() {
-        GLfloat yOffset = (*distrib)(*randMt) / 50.f;
+    GLfloat yOffset = (*distrib)(*randMt) / 50.f;
 
-        pipes.push_back(DrawableObj::create("botPipe"));
-        pipes.back()->setOffset(0, yOffset - 2 - ySpace / 2);
+    pipes.push_back(DrawableObj::create("botPipe"));
+    pipes.back()->setOffset(0, yOffset - 2 - ySpace / 2);
 
-        pipes.push_back(DrawableObj::create("topPipe"));
-        pipes.back()->setOffset(0, yOffset + ySpace / 2);
+    pipes.push_back(DrawableObj::create("topPipe"));
+    pipes.back()->setOffset(0, yOffset + ySpace / 2);
 
-        //todo: substitute 1.388 to 1 + pipewidth
-        //todo: reshape must be done to all new hitboxes immediately after creation or prepare reshaped coords before creating it
-        hitboxes.push_back(new Hitbox(1, 1.388, -1, 1));
-        hitboxes.push_back(new Hitbox(1, 1.388, -1, 1));
+    hitboxes.push_back(new Hitbox(1, 1 + this->pipeWidth, -1, ySpace / 2 + yOffset - 1));
+    hitboxes.push_back(new Hitbox(1, 1 + this->pipeWidth, ySpace / 2 + yOffset - 1, 1));
+}
+
+void Pipes::updatePipes() {
+    for (DrawableObj* obj : pipes) {
+        obj->setOffset(obj->getXOffset() + this->xDisplacement, obj->getYOffset());
     }
     
-
-    void reshape(int screenWidth, int screenHeight) {
-        for (Hitbox* hitbox : hitboxes) {
-            hitbox->updateX(this->xDisplacement);
-        }
+    for (Hitbox* hitbox : hitboxes) {
+        hitbox->updateX(this->xDisplacement);
     }
 
-    void updatePipes() {
-        for (DrawableObj* obj : pipes) {
-            obj->setOffset(obj->getXOffset() + this->xDisplacement, obj->getYOffset());
-            std::cout << "pipeLeft: " << obj->getXOffset() + this->xDisplacement << "\n\n";
-        }
+    if (pipes.size() >= 2 && pipes[0]->getXOffset() < -2.f - this->pipeWidth) {
+        delete pipes[0];
+        delete pipes[1];
+        pipes.pop_front();
+        pipes.pop_front();
+    }
+}
 
-        for (Hitbox* hitbox : hitboxes) {
-            hitbox->updateX(this->xDisplacement);
-            std::cout << "xLeft=" << hitbox->xLeft << std::endl << std::endl;
-        }
-
-        if (pipes.size() >= 2 && pipes[0]->getXOffset() < -2.f) {
-            delete pipes[0];
-            delete pipes[1];
-
-            pipes.pop_front();
-            pipes.pop_front();
-
-            delete hitboxes[0];
-            delete hitboxes[1];
-
-            hitboxes.pop_front();
-            hitboxes.pop_front();
-        }
-
+bool Pipes::checkCollision() {
+    if (hitboxes.size() < 2) {
+        return false;
     }
 
-    void draw() {
-        for (DrawableObj* obj : pipes) {
-            obj->draw();
-        }
+    if (hitboxes[0]->xRight < birdHitbox->xLeft) {
+        delete hitboxes[0];
+        delete hitboxes[1];
+        hitboxes.pop_front();
+        hitboxes.pop_front();
     }
-};
+
+    if (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1])) {
+        std::cout << "COLLISION!!!\n";
+    }
+
+    return (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1]));
+}
+
+void Pipes::draw() {
+    for (DrawableObj* obj : pipes) {
+        obj->draw();
+    }
+}

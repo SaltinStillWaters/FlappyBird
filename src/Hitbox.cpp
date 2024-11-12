@@ -1,5 +1,6 @@
 #include "Hitbox.h"
 #include <algorithm>
+#include <iostream>
 
 Hitbox::Hitbox(float xLeft, float xRight, float yBot, float yTop) {
     this->xLeft = xLeft;
@@ -8,23 +9,10 @@ Hitbox::Hitbox(float xLeft, float xRight, float yBot, float yTop) {
     this->yTop = yTop;
 }
 
-// void Hitbox::initPipeWidth() {
-// //read from metadata
-// }
-
-void Hitbox::reshape(int width, int height) {
-    float min = std::min(width, height);
-
-    this->xLeft *= min/width;
-    this->xRight *= min/width;
-
-    this->yTop *= min/height;
-    this->yBot *= min/height;
-    
-    //pipeWidth *= min/width;
-}
-
-bool Hitbox::checkCollision(const Hitbox& hitbox) {
+bool Hitbox::checkCollision(const Hitbox& hitbox) const {
+    // std::cout << "bird: (" << xLeft << ", " << xRight << ", " << yTop << ", " << yBot << ")\n"
+    //           << "hitbox: (" << hitbox.xLeft << ", " << hitbox.xRight << ", " 
+    //           << hitbox.yTop << ", " << hitbox.yBot << ")\n";
     return (checkXCollision(hitbox) && checkYCollision(hitbox));
 }
 
@@ -33,12 +21,12 @@ void Hitbox::updateX(float offset) {
     xRight += offset;
 }
 
-bool Hitbox::checkXCollision(const Hitbox& hitbox) {
+bool Hitbox::checkXCollision(const Hitbox& hitbox) const {
     return (xLeft <= hitbox.xRight && xRight >= hitbox.xLeft) ||
            (hitbox.xLeft <= xRight && hitbox.xRight >= xLeft);
 }
 
-bool Hitbox::checkYCollision(const Hitbox& hitbox) {
+bool Hitbox::checkYCollision(const Hitbox& hitbox) const {
     return (yBot <= hitbox.yTop && yTop >= hitbox.yBot) ||
            (hitbox.yBot <= yTop && hitbox.yTop >= yBot);
 }
