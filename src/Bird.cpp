@@ -27,7 +27,6 @@ void Bird::update() {
             yOffset -= 0.002f * GRAVITY;
         }
     }
-    Sleep(1000 / 60);
     setRotation(rotateAngle);
     setOffset(-0.5f, yOffset);
 }
