@@ -58,6 +58,8 @@ class DrawableObj {
     void setOffset(GLfloat x, GLfloat y);
     void setRotation(GLfloat angle);
     void setScale(GLfloat scale);
+    GLfloat getXOffset();
+    GLfloat getYOffset();
     void setFixed();
     void setUnfixed();
     void draw();
