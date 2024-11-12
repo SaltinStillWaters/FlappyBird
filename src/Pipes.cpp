@@ -1,10 +1,28 @@
 #include "Pipes.h"
 #include <iostream>
+#include <mutex>
+
+//static members
+Pipes* Pipes::instance = nullptr;
+std::mutex Pipes::mtx;
 
 unsigned int Pipes::updateCount = Pipes::updatesNeeded;
 
-Pipes::Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace)
-    : xDisplacement(xDisplacement), ySpace(ySpace) {
+Pipes* Pipes::getInstance(const std::string& topPipeFilename, const std::string& botPipeFilename,
+                          const GLfloat xDisplacement, const GLfloat ySpace) {
+        if (instance == nullptr) {
+            std::lock_guard<std::mutex> lock(mtx);
+            if (instance == nullptr) {
+                instance = new Pipes(topPipeFilename, botPipeFilename, xDisplacement, ySpace);
+            }
+        }
+
+        return instance;
+    }
+
+Pipes::Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename,
+             const GLfloat xDisplacement, const GLfloat ySpace)
+            : xDisplacement(xDisplacement), ySpace(ySpace) {
     DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, &DrawableObj::formatVertexColor, false);
     DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, &DrawableObj::formatVertexColor, false);
 
@@ -27,8 +45,8 @@ void Pipes::createPipe() {
     pipes.push_back(DrawableObj::create("topPipe"));
     pipes.back()->setOffset(0, yOffset + ySpace / 2);
 
-    hitboxes.push_back(new Hitbox(1, 1 + this->pipeWidth, -1, ySpace / 2 + yOffset - 1));
-    hitboxes.push_back(new Hitbox(1, 1 + this->pipeWidth, ySpace / 2 + yOffset - 1, 1));
+    hitboxes.push_back(new Hitbox(1, 1 + Pipes::pipeWidth, -1, ySpace / 2 + yOffset - 1));
+    hitboxes.push_back(new Hitbox(1, 1 + Pipes::pipeWidth, ySpace / 2 + yOffset - 1, 1));
 }
 
 void Pipes::updatePipes() {
@@ -40,7 +58,7 @@ void Pipes::updatePipes() {
         hitbox->updateX(this->xDisplacement);
     }
 
-    if (pipes.size() >= 2 && pipes[0]->getXOffset() < -2.f - this->pipeWidth) {
+    if (pipes.size() >= 2 && pipes[0]->getXOffset() < -2.f - Pipes::pipeWidth) {
         std::cout << "Pipe Deleted: ";
         delete pipes[0];
         delete pipes[1];

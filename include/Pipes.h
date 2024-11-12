@@ -7,12 +7,30 @@
 #include <deque>
 #include <string>
 #include <random>
+#include <mutex>
 
 /*
 To Do
 add birdHitbox to constructor
 */
 class Pipes {
+public:
+    Pipes() = delete;
+    Pipes(const Pipes& obj) = delete;
+
+    static Pipes* getInstance(const std::string& topPipeFilename, const std::string& botPipeFilename,
+                              const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
+
+    /**
+     * These 3 function should be called in the order of: create, update, checkCollision. 
+     * They should be called in the most frequently called event. (Idle or Timer);
+     */
+    void createPipe();
+    void updatePipes();
+    bool checkCollision();
+
+    void draw();
+
 private:
     std::deque<DrawableObj*> pipes;
     std::deque<Hitbox*> hitboxes;
@@ -23,25 +41,21 @@ private:
     ArrayBuffer* botPipeVBO;
     const GLfloat xDisplacement;
     const GLfloat ySpace;
-    const float pipeWidth = .33814; //temp
+    static float constexpr pipeWidth = .33814; //temp
 
-    static const unsigned int updatesNeeded = 120; //change this as needed
+    static unsigned int constexpr updatesNeeded = 120; //change this as needed
     static unsigned int updateCount;
     
+    //Random
     std::mt19937* randMt;
     std::uniform_int_distribution<int>* distrib;
 
-public:
-    Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace = 0.3);
+    //Singleton
+    static Pipes* instance;
+    static std::mutex mtx;
+    Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, 
+          const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
 
-    /**
-     * These 3 function should be called in the order of: create, update, checkCollision. They should be called in the most frequently called event. (Idle or Timer);
-     */
-    void createPipe();
-    void updatePipes();
-    bool checkCollision();
-
-    void draw();
 };
 
 #endif

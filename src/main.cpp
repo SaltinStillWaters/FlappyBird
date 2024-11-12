@@ -66,7 +66,7 @@ void init() {
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
                       &DrawableObj::formatVertexColor, false);
 
-    pipes = new Pipes("topPipe.data", "botPipe.data", -0.01);
+    pipes = Pipes::getInstance("topPipe.data", "botPipe.data", -0.01);
     pipes->createPipe();
     box = DrawableObj::create("square");
     box2 = DrawableObj::create("square");
