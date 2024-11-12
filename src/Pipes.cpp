@@ -5,11 +5,6 @@ unsigned int Pipes::updateCount = Pipes::updatesNeeded;
 
 Pipes::Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace)
     : xDisplacement(xDisplacement), ySpace(ySpace) {
-    //Can be made to a parameter
-    AttribFormat* format = new AttribFormat();
-    format->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
-    format->addAttrib<GLubyte>(3, GL_COLOR_ARRAY);
-
     DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, &DrawableObj::formatVertexColor, false);
     DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, &DrawableObj::formatVertexColor, false);
 

@@ -8,6 +8,10 @@
 #include <string>
 #include <random>
 
+/*
+To Do
+add birdHitbox to constructor
+*/
 class Pipes {
 private:
     std::deque<DrawableObj*> pipes;
