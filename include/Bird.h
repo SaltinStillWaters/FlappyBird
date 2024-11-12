@@ -5,16 +5,15 @@
 
 class Bird : public DrawableObj {
 public:
-    Bird(GLenum drawMode, ArrayBuffer* vertices);
-    Bird(GLenum drawMode, ArrayBuffer* vertices, IndexBuffer* indices);
+    Bird(GLenum drawMode, ArrayBuffer* vertices, bool normalized = true);
+    Bird(GLenum drawMode, ArrayBuffer* vertices, IndexBuffer* indices, bool normalized = true);
     ~Bird();
 
     void update();
     void jump();
 
 private:
-    GLfloat rotate;
-    GLfloat yOffset;
+    GLfloat rotateAngle = 0.f;
     GLfloat fly;
     bool isFlying;
 

@@ -27,7 +27,6 @@ int main(int argcp, char **argv) {
     glutIdleFunc(idle);
     glutMouseFunc(jump);
     glutMainLoop();
-
     cleanup();
     return 0;
 }
@@ -42,7 +41,14 @@ void init() {
 
     buffer = new ArrayBuffer("bird.data", attribFormat);
     bird = new Bird(GL_QUADS, buffer);
-    bird->setScale(0.15f, 0.15f);
+    bird->setScale(0.15f);
+
+    //Lalabas yung bird pag tina
+    // glMatrixMode(GL_PROJECTION);
+    // glLoadIdentity();
+    // gluOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f);
+    // glMatrixMode(GL_MODELVIEW);
+    // DrawableObj::updateScreenDimens(900.0f, 900.0f);
 }
 
 void display() {
