@@ -67,7 +67,7 @@ void init() {
     DrawableObj::type("square", GL_QUADS, "vertices.data", &DrawableObj::formatVertexColor);
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data", &DrawableObj::formatVertexColor, false);
 
-    pipes = new Pipes("topPipe.data", "botPipe.data", -0.01);
+    pipes = new Pipes("topPipe.data", "botPipe.data", -0.01f);
     pipes->createPipe();
     
     box = DrawableObj::create("square");
@@ -76,13 +76,8 @@ void init() {
     box2->setScale(0.5);
     box2->setOffset(0.5, 0.5);
 
-    AttribFormat* attribFormat = new AttribFormat();
-    attribFormat->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
-    attribFormat->addAttrib<GLfloat>(4, GL_COLOR_ARRAY);
-
-    buffer = new ArrayBuffer("bird.data", attribFormat);
-    bird = new Bird(GL_QUADS, buffer);
-    bird->setScale(0.2f);
+    bird = new Bird("bird.data");
+    bird->setSize(0.15f);
 }
 
 void display() {
@@ -142,7 +137,6 @@ void cleanup() {
     delete box2;
     delete pipes;
     delete bird;
-    delete buffer;
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
