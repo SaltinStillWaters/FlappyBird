@@ -1,4 +1,5 @@
 #include "Bird.h"
+#include "synchapi.h"
 
 Bird::Bird(GLenum drawMode, ArrayBuffer* vertices)
     : DrawableObj(drawMode, vertices), rotate(0.f), yOffset(0.f), fly(0.f), isFlying(false) {}
@@ -16,14 +17,14 @@ void Bird::update() {
 
     if (isFlying) {
         if (yOffset < MAX_FLIGHT_HEIGHT - 1.0f) {
-            rotate += rotate >= 45.f ? 0 : 3.f;
-            yOffset += 0.0015f * GRAVITY ;
+            rotate += rotate >= 45.f ? 0 : 4.f;
+            yOffset += 0.001f * GRAVITY ;
         }
         fly += 0.01f;
     } else {
         if (yOffset > MIN_FLIGHT_HEIGHT) {
-            rotate -= rotate <= -45.f ? 0 : 3.f;
-            yOffset -= 0.005f * GRAVITY;
+            rotate -= rotate <= -45.f ? 0 : 2.f;
+            yOffset -= 0.002f * GRAVITY;
         }
     }
     Sleep(1000 / 60);
