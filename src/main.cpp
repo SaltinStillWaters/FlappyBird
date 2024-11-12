@@ -5,7 +5,6 @@
 #include "SkyHelpers.h"
 #include <iostream>
 
-// Global variables
 DrawableObj *sky;
 DrawableObj *box;
 DrawableObj *box2;
@@ -15,7 +14,6 @@ Bird* bird;
 GLfloat rotate = 0.f;
 ArrayBuffer* buffer;
 
-// Function prototypes
 void display();
 void init();
 void idle();
@@ -40,21 +38,18 @@ int main(int argcp, char **argv) {
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
     init();
-
-    // GLUT callbacks
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutMouseWheelFunc(scroll);
     glutIdleFunc(idle);
     glutMouseFunc(jump);
-
     glutMainLoop();
 
     cleanup();
     return 0;
 }
 
-// OpenGL error message callback
+
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 GLenum severity, GLsizei length,
                                 const GLchar *message, const void *userParam) {
@@ -64,12 +59,11 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
             severity, message);
 }
 
-// Initialization function
+
 void init() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    // Initialize Drawable objects
     DrawableObj::type("square", GL_QUADS, "vertices.data", &DrawableObj::formatVertexColor);
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data", &DrawableObj::formatVertexColor, false);
 
@@ -89,14 +83,6 @@ void init() {
     buffer = new ArrayBuffer("bird.data", attribFormat);
     bird = new Bird(GL_QUADS, buffer);
     bird->setScale(0.2f);
-
-    // Something needed to render bird
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f);
-    glMatrixMode(GL_MODELVIEW);
-
-    DrawableObj::updateScreenDimens(900.0f, 900.0f);
 }
 
 void display() {
