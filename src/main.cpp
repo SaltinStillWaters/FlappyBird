@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Pipes.h"
 #include "DrawableObj.h"
+#include "SkyHelpers.h"
 
 DrawableObj *sky;
 DrawableObj *box;
@@ -110,7 +111,7 @@ void reshape(int width, int height) {
 }
 
 void scroll(int button, int dir, int x, int y) {
-    std::cout << dir << ' ' << x << ' ' << y << '\n';
+    updateSkyColors(sky->getVertexBuffer());
 }
 
 void cleanup() {
