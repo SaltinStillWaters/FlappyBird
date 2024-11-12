@@ -5,8 +5,8 @@ unsigned int Pipes::updateCount = Pipes::updatesNeeded;
 
 Pipes::Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace)
     : xDisplacement(xDisplacement), ySpace(ySpace) {
-    DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, &DrawableObj::formatVertexColor, false);
-    DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, &DrawableObj::formatVertexColor, false);
+    DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, &DrawableObj::formatVertexColor);
+    DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, &DrawableObj::formatVertexColor);
 
     randMt = new std::mt19937 { std::random_device{}() };
     distrib = new std::uniform_int_distribution<int> { 20, 80 };
