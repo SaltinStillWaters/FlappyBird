@@ -65,14 +65,6 @@ void DrawableObj::type(std::string name, GLenum drawMode,
         new IndexBuffer(indexFilename, indexUsage), drawMode, normalizedCoords};
 }
 
-GLfloat DrawableObj::getXOffset() {
-    return xOffset;
-}
-
-GLfloat DrawableObj::getYOffset() {
-    return yOffset;
-}
-
 DrawableObj *DrawableObj::create(std::string name) {
     if (DrawableObj::typeTemplates.find(name) ==
         DrawableObj::typeTemplates.end())
@@ -119,12 +111,18 @@ void DrawableObj::setFixed() { normalizedCoords = true; }
 
 void DrawableObj::setUnfixed() { normalizedCoords = false; }
 
+GLfloat DrawableObj::getXOffset() {
+    return xOffset;
+}
+
+GLfloat DrawableObj::getYOffset() {
+    return yOffset;
+}
+
 void DrawableObj::updateScreenDimens(GLfloat width, GLfloat height) {
     screenWidth = width;
     screenHeight = height;
 }
-
-ArrayBuffer *DrawableObj::getVertexBuffer() { return vertexBuffer; }
 
 void DrawableObj::draw() {
     vertexBuffer->bind();
@@ -146,17 +144,14 @@ void DrawableObj::draw() {
         glColor4f(plainColor.r, plainColor.g, plainColor.b, plainColor.a);
     }
 
-    glPushMatrix();
     glLoadIdentity();
-    glTranslatef(xOffset, yOffset, 0.f);
-
-    glTranslatef(xOffset, yOffset, 0.f);
 
     if (normalizedCoords) {
         GLfloat minDimens = std::min(screenWidth, screenHeight);
         glScalef(minDimens / screenWidth, minDimens / screenHeight, 1.f);
     }
 
+    glTranslatef(xOffset, yOffset, 0.f);
     glScalef(scale, scale, 1.f);
     glRotatef(rotation, 0.f, 0.f, 1.f);
 
@@ -170,5 +165,4 @@ void DrawableObj::draw() {
     if (plainColored) {
         glEnableClientState(GL_COLOR_ARRAY);
     }
-    glPopMatrix();
 }
