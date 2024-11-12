@@ -12,7 +12,6 @@
                 "-I\"C:\\glew-2.2.0-win32\\glew-2.2.0\\include\"",
                 "-L\"C:\\glew-2.2.0-win32\\glew-2.2.0\\lib\\Release\\x64\"",
                 "-I", "${workspaceFolder}/include",
-                "-L", "${workspaceFolder}/lib",
                 "${workspaceFolder}/src/*.cpp",
                 "-lopengl32", "-lfreeglut", "-lglew32", "-lglu32",
                 "-o", "${workspaceFolder}/build/GraphicsFinals.exe"
