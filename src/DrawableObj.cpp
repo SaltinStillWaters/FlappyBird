@@ -124,6 +124,8 @@ void DrawableObj::updateScreenDimens(GLfloat width, GLfloat height) {
     screenHeight = height;
 }
 
+ArrayBuffer *DrawableObj::getVertexBuffer() { return vertexBuffer; }
+
 void DrawableObj::draw() {
     vertexBuffer->bind();
     AttribFormat *attribs = vertexBuffer->getFormat();
@@ -144,14 +146,15 @@ void DrawableObj::draw() {
         glColor4f(plainColor.r, plainColor.g, plainColor.b, plainColor.a);
     }
 
+    glPushMatrix();
     glLoadIdentity();
+    glTranslatef(xOffset, yOffset, 0.f);
 
     if (normalizedCoords) {
         GLfloat minDimens = std::min(screenWidth, screenHeight);
         glScalef(minDimens / screenWidth, minDimens / screenHeight, 1.f);
     }
 
-    glTranslatef(xOffset, yOffset, 0.f);
     glScalef(scale, scale, 1.f);
     glRotatef(rotation, 0.f, 0.f, 1.f);
 
@@ -165,4 +168,6 @@ void DrawableObj::draw() {
     if (plainColored) {
         glEnableClientState(GL_COLOR_ARRAY);
     }
+
+    glPopMatrix();
 }
