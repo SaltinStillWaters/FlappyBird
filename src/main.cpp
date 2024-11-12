@@ -1,7 +1,10 @@
 #include <GL/glew.h>
-
 #include <GL/freeglut.h>
+
 #include <iostream>
+#include <Windows.h>
+#include <mmsystem.h>
+
 #include "Pipes.h"
 #include "DrawableObj.h"
 #include "SkyHelpers.h"
@@ -22,6 +25,9 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 const GLchar *message, const void *userParam);
 
 int main(int argcp, char **argv) {
+    LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
+    PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
+
     glutInit(&argcp, argv);
     glutInitWindowSize(400, 400);
     glutCreateWindow("Window");
