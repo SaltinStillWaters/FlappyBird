@@ -5,12 +5,11 @@
 #include "Pipes.h"
 #include "DrawableObj.h"
 #include "SkyHelpers.h"
+#include "GameController.h"
 
 DrawableObj *sky;
-DrawableObj *box;
-DrawableObj *box2;
 Pipes* pipes;
-GLfloat rotate = 0.f;
+GameController* controller;
 
 void display();
 void init();
@@ -48,15 +47,6 @@ int main(int argcp, char **argv) {
     return 0;
 }
 
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
-                                GLenum severity, GLsizei length,
-                                const GLchar *message, const void *userParam) {
-    fprintf(stderr,
-            "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
-            severity, message);
-}
-
 void init() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
@@ -66,20 +56,14 @@ void init() {
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
                       &DrawableObj::formatVertexColor, false);
 
-    pipes = Pipes::getInstance("topPipe.data", "botPipe.data", -0.01);
-    pipes->createPipe();
-    box = DrawableObj::create("square");
-    box2 = DrawableObj::create("square");
+    controller = GameController::getInstance();
+    pipes = Pipes::getInstance(controller, "topPipe.data", "botPipe.data", -0.01);
     sky = DrawableObj::create("sky");
-    box2->setScale(0.5);
-    box2->setOffset(0.5, 0.5);
 }
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     sky->draw();
-    box->draw();
-    box2->draw();
     pipes->draw();
 
     glFlush();
@@ -90,11 +74,6 @@ void idle() {
     pipes->updatePipes();
     pipes->checkCollision();
     
-    rotate += 1.f;
-    if (rotate >= 360.f)
-        rotate = 0.f;
-    box->setRotation(rotate);
-    box2->setRotation(rotate);
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
@@ -116,9 +95,17 @@ void scroll(int button, int dir, int x, int y) {
 
 void cleanup() {
     delete sky;
-    delete box;
-    delete box2;
+    delete pipes;
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
+}
+
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
+                                GLenum severity, GLsizei length,
+                                const GLchar *message, const void *userParam) {
+    fprintf(stderr,
+            "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
+            severity, message);
 }

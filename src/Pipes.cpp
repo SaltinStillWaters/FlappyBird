@@ -8,30 +8,34 @@ std::mutex Pipes::mtx;
 
 unsigned int Pipes::updateCount = Pipes::updatesNeeded;
 
-Pipes* Pipes::getInstance(const std::string& topPipeFilename, const std::string& botPipeFilename,
-                          const GLfloat xDisplacement, const GLfloat ySpace) {
+Pipes* Pipes::getInstance(GameController* controller, const std::string& topPipeFilename,
+                         const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace) {
         if (instance == nullptr) {
             std::lock_guard<std::mutex> lock(mtx);
             if (instance == nullptr) {
-                instance = new Pipes(topPipeFilename, botPipeFilename, xDisplacement, ySpace);
+                instance = new Pipes(controller, topPipeFilename, botPipeFilename, xDisplacement, ySpace);
             }
         }
 
         return instance;
     }
 
-Pipes::Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename,
-             const GLfloat xDisplacement, const GLfloat ySpace)
-            : xDisplacement(xDisplacement), ySpace(ySpace) {
-    DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, &DrawableObj::formatVertexColor, false);
-    DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, &DrawableObj::formatVertexColor, false);
+Pipes::Pipes(GameController* controller, const std::string& topPipeFilename, 
+             const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace)
+            : controller(controller), xDisplacement(xDisplacement), ySpace(ySpace) {
+    DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, &DrawableObj::formatVertexColor, true);
+    DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, &DrawableObj::formatVertexColor, true);
 
     randMt = new std::mt19937 { std::random_device{}() };
     distrib = new std::uniform_int_distribution<int> { 20, 80 };
 }
 
 void Pipes::createPipe() {
-    if (Pipes::updateCount < updatesNeeded) {
+    if (this->controller->getHasCollided()) {
+        return;
+    }
+
+    if (Pipes::updateCount < Pipes::updatesNeeded) {
         ++Pipes::updateCount;
         return;
     }
@@ -50,6 +54,10 @@ void Pipes::createPipe() {
 }
 
 void Pipes::updatePipes() {
+    if (this->controller->getHasCollided()) {
+        return;
+    }
+
     for (DrawableObj* obj : pipes) {
         obj->setOffset(obj->getXOffset() + this->xDisplacement, obj->getYOffset());
     }
@@ -67,9 +75,13 @@ void Pipes::updatePipes() {
     }
 }
 
-bool Pipes::checkCollision() {
+void Pipes::checkCollision() {
+    if (this->controller->getHasCollided()) {
+        return;
+    }
+
     if (hitboxes.size() < 2) {
-        return false;
+        return;
     }
 
     if (hitboxes[0]->xRight < birdHitbox->xLeft) {
@@ -82,9 +94,8 @@ bool Pipes::checkCollision() {
 
     if (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1])) {
         //std::cout << "COLLISION!!!\n";
+        this->controller->setHasCollided();
     }
-
-    return (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1]));
 }
 
 void Pipes::draw() {

@@ -4,6 +4,7 @@
 #include "DrawableObj.h"
 #include "Hitbox.h"
 #include "ArrayBuffer.h"
+#include "GameController.h"
 #include <deque>
 #include <string>
 #include <random>
@@ -18,7 +19,7 @@ public:
     Pipes() = delete;
     Pipes(const Pipes& obj) = delete;
 
-    static Pipes* getInstance(const std::string& topPipeFilename, const std::string& botPipeFilename,
+    static Pipes* getInstance(GameController* controller, const std::string& topPipeFilename, const std::string& botPipeFilename,
                               const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
 
     /**
@@ -27,7 +28,7 @@ public:
      */
     void createPipe();
     void updatePipes();
-    bool checkCollision();
+    void checkCollision();
 
     void draw();
 
@@ -36,6 +37,7 @@ private:
     std::deque<Hitbox*> hitboxes;
 
     const Hitbox* birdHitbox = new Hitbox(-0.5, 0, -0.5, 0.5);
+    GameController* controller;
 
     ArrayBuffer* topPipeVBO;
     ArrayBuffer* botPipeVBO;
@@ -53,7 +55,7 @@ private:
     //Singleton
     static Pipes* instance;
     static std::mutex mtx;
-    Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, 
+    Pipes(GameController* controller, const std::string& topPipeFilename, const std::string& botPipeFilename, 
           const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
 
 };
