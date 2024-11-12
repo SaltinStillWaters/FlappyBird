@@ -67,7 +67,7 @@ void Pipes::updatePipes() {
     }
 
     if (pipes.size() >= 2 && pipes[0]->getXOffset() < -2.f - Pipes::pipeWidth) {
-        std::cout << "Pipe Deleted: ";
+        //std::cout << "Pipe Deleted: ";
         delete pipes[0];
         delete pipes[1];
         pipes.pop_front();
@@ -85,7 +85,8 @@ void Pipes::checkCollision() {
     }
 
     if (hitboxes[0]->xRight < birdHitbox->xLeft) {
-        std::cout << "Hitbox deleted\n";
+        controller->addScore();
+        //std::cout << "Hitbox deleted\n";
         delete hitboxes[0];
         delete hitboxes[1];
         hitboxes.pop_front();

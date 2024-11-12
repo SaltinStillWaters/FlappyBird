@@ -23,4 +23,4 @@ bool GameController::getHasCollided() const { return hasCollided; }
 
 void GameController::setHasCollided() { hasCollided = true; }
 
-void GameController::addScore() { ++score; }
+void GameController::addScore() { ++score; std::cout << "\nScore: " << score; }
