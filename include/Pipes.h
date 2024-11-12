@@ -13,7 +13,7 @@ private:
     std::deque<DrawableObj*> pipes;
     std::deque<Hitbox*> hitboxes;
 
-    const Hitbox* birdHitbox = new Hitbox(-0.5, 0.5, -0.5, 0.5);
+    const Hitbox* birdHitbox = new Hitbox(-0.5, 0, -0.5, 0.5);
 
     ArrayBuffer* topPipeVBO;
     ArrayBuffer* botPipeVBO;

@@ -65,14 +65,6 @@ void DrawableObj::type(std::string name, GLenum drawMode,
         new IndexBuffer(indexFilename, indexUsage), drawMode, normalizedCoords};
 }
 
-GLfloat DrawableObj::getXOffset() {
-    return xOffset;
-}
-
-GLfloat DrawableObj::getYOffset() {
-    return yOffset;
-}
-
 DrawableObj *DrawableObj::create(std::string name) {
     if (DrawableObj::typeTemplates.find(name) ==
         DrawableObj::typeTemplates.end())
@@ -119,6 +111,14 @@ void DrawableObj::setFixed() { normalizedCoords = true; }
 
 void DrawableObj::setUnfixed() { normalizedCoords = false; }
 
+GLfloat DrawableObj::getXOffset() {
+    return xOffset;
+}
+
+GLfloat DrawableObj::getYOffset() {
+    return yOffset;
+}
+
 void DrawableObj::updateScreenDimens(GLfloat width, GLfloat height) {
     screenWidth = width;
     screenHeight = height;
@@ -150,8 +150,6 @@ void DrawableObj::draw() {
     glLoadIdentity();
     glTranslatef(xOffset, yOffset, 0.f);
 
-    glTranslatef(xOffset, yOffset, 0.f);
-
     if (normalizedCoords) {
         GLfloat minDimens = std::min(screenWidth, screenHeight);
         glScalef(minDimens / screenWidth, minDimens / screenHeight, 1.f);
@@ -170,5 +168,6 @@ void DrawableObj::draw() {
     if (plainColored) {
         glEnableClientState(GL_COLOR_ARRAY);
     }
+
     glPopMatrix();
 }

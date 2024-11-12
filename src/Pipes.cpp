@@ -10,8 +10,8 @@ Pipes::Pipes(const std::string& topPipeFilename, const std::string& botPipeFilen
     format->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);
     format->addAttrib<GLubyte>(3, GL_COLOR_ARRAY);
 
-    DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, format, false);
-    DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, format, false);
+    DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, &DrawableObj::formatVertexColor, false);
+    DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, &DrawableObj::formatVertexColor, false);
 
     randMt = new std::mt19937 { std::random_device{}() };
     distrib = new std::uniform_int_distribution<int> { 20, 80 };
@@ -46,6 +46,7 @@ void Pipes::updatePipes() {
     }
 
     if (pipes.size() >= 2 && pipes[0]->getXOffset() < -2.f - this->pipeWidth) {
+        std::cout << "Pipe Deleted: ";
         delete pipes[0];
         delete pipes[1];
         pipes.pop_front();
@@ -59,6 +60,7 @@ bool Pipes::checkCollision() {
     }
 
     if (hitboxes[0]->xRight < birdHitbox->xLeft) {
+        std::cout << "Hitbox deleted\n";
         delete hitboxes[0];
         delete hitboxes[1];
         hitboxes.pop_front();
@@ -66,7 +68,7 @@ bool Pipes::checkCollision() {
     }
 
     if (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1])) {
-        std::cout << "COLLISION!!!\n";
+        //std::cout << "COLLISION!!!\n";
     }
 
     return (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1]));

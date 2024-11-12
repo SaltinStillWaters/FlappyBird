@@ -72,7 +72,7 @@ void init() {
     box2 = DrawableObj::create("square");
     sky = DrawableObj::create("sky");
     box2->setScale(0.5);
-    box2->setOffset(1, 1);
+    box2->setOffset(0.5, 0.5);
 }
 
 void display() {
@@ -81,25 +81,6 @@ void display() {
     box->draw();
     box2->draw();
     pipes->draw();
-
-//     // Disable vertex and color arrays
-// glDisableClientState(GL_VERTEX_ARRAY);
-// glDisableClientState(GL_COLOR_ARRAY);
-// glLoadIdentity();
-// // Set the color for the box (for example, red)
-// glColor3f(1.0f, 0.0f, 0.0f); 
-
-// // Draw the box using immediate mode (GL_QUADS)
-// glBegin(GL_QUADS);
-//     glVertex2f(0.9, 0.5f);  // Top Left
-//     glVertex2f(1.5f, 0.5f);   // Top Right
-//     glVertex2f(1.5f, -0.5f);  // Bottom Right
-//     glVertex2f(0.9, -0.5f); // Bottom Left
-// glEnd();
-
-// Re-enable vertex and color arrays
-// glEnableClientState(GL_VERTEX_ARRAY);
-// glEnableClientState(GL_COLOR_ARRAY);
 
     glFlush();
 }
@@ -125,7 +106,7 @@ void reshape(int width, int height) {
         w = h * 16.f / 9.f;
     else if (w / h < 16.f / 9.f)
         h = w * 9.f / 16.f;
-    glViewport(((GLfloat)width - w) / 2.f, ((GLfloat)height - h) / 2.f, w, h);
+    glViewport(((GLfloat) width - w) / 2.f, ((GLfloat) height - h) / 2.f, w, h);
     DrawableObj::updateScreenDimens(w, h);
 }
 
