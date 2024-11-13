@@ -1,10 +1,28 @@
 #include "Pipes.h"
 #include <iostream>
+#include <mutex>
+
+//static members
+Pipes* Pipes::instance = nullptr;
+std::mutex Pipes::mtx;
 
 unsigned int Pipes::updateCount = Pipes::updatesNeeded;
 
-Pipes::Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace)
-    : xDisplacement(xDisplacement), ySpace(ySpace) {
+Pipes* Pipes::getInstance(GameController* controller, const std::string& topPipeFilename,
+                         const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace) {
+        if (instance == nullptr) {
+            std::lock_guard<std::mutex> lock(mtx);
+            if (instance == nullptr) {
+                instance = new Pipes(controller, topPipeFilename, botPipeFilename, xDisplacement, ySpace);
+            }
+        }
+
+        return instance;
+    }
+
+Pipes::Pipes(GameController* controller, const std::string& topPipeFilename, 
+             const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace)
+            : controller(controller), xDisplacement(xDisplacement), ySpace(ySpace) {
     DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, &DrawableObj::formatVertexColor);
     DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, &DrawableObj::formatVertexColor);
 
@@ -31,7 +49,11 @@ Pipes::~Pipes() {
 }
 
 void Pipes::createPipe() {
-    if (Pipes::updateCount < updatesNeeded) {
+    if (this->controller->getHasCollided()) {
+        return;
+    }
+
+    if (Pipes::updateCount < Pipes::updatesNeeded) {
         ++Pipes::updateCount;
         return;
     }
@@ -50,6 +72,10 @@ void Pipes::createPipe() {
 }
 
 void Pipes::updatePipes() {
+    if (this->controller->getHasCollided()) {
+        return;
+    }
+
     for (DrawableObj* obj : pipes) {
         obj->setOffset(obj->getXOffset() + this->xDisplacement, obj->getYOffset());
     }
@@ -58,8 +84,8 @@ void Pipes::updatePipes() {
         hitbox->updateX(this->xDisplacement);
     }
 
-    if (pipes.size() >= 2 && pipes[0]->getXOffset() < (-1.f - this->pipeWidth)) {
-        std::cout << "Pipe deleted\n";
+    if (pipes.size() >= 2 && pipes[0]->getXOffset() < -2.f - Pipes::pipeWidth) {
+        //std::cout << "Pipe Deleted: ";
         delete pipes[0];
         delete pipes[1];
         pipes.pop_front();
@@ -67,12 +93,17 @@ void Pipes::updatePipes() {
     }
 }
 
-bool Pipes::checkCollision() {
+void Pipes::checkCollision() {
+    if (this->controller->getHasCollided()) {
+        return;
+    }
+
     if (hitboxes.size() < 2) {
-        return false;
+        return;
     }
 
     if (hitboxes[0]->xRight < birdHitbox->xLeft) {
+        controller->addScore();
         //std::cout << "Hitbox deleted\n";
         delete hitboxes[0];
         delete hitboxes[1];
@@ -80,11 +111,13 @@ bool Pipes::checkCollision() {
         hitboxes.pop_front();
     }
 
+    if (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1])) {
+        //std::cout << "COLLISION!!!\n";
+        this->controller->setHasCollided();
+    }
     // if (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1])) {
     //     std::cout << "COLLISION!!!\n";
     // }
-
-    return (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1]));
 }
 
 void Pipes::draw() {

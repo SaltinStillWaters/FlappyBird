@@ -1,16 +1,20 @@
 #include <GL/glew.h>
-
 #include <GL/freeglut.h>
-#include <iostream>
 
+#include <iostream>
+#include <Windows.h>
+#include <mmsystem.h>
+
+#include "Pipes.h"
 #include "DrawableObj.h"
 #include "Pipes.h"
 #include "SkyHelpers.h"
+#include "GameController.h"
 
 DrawableObj *sky;
+Pipes* pipes;
+GameController* controller;
 DrawableObj *sunAndMoon;
-Pipes *pipes;
-GLfloat rotate = 0.f;
 
 void display();
 void init();
@@ -23,6 +27,9 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 const GLchar *message, const void *userParam);
 
 int main(int argcp, char **argv) {
+    // LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
+    // PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
+
     glutInit(&argcp, argv);
     glutInitWindowSize(400, 400);
     glutCreateWindow("Window");
@@ -48,15 +55,6 @@ int main(int argcp, char **argv) {
     return 0;
 }
 
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
-                                GLenum severity, GLsizei length,
-                                const GLchar *message, const void *userParam) {
-    fprintf(stderr,
-            "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
-            severity, message);
-}
-
 void init() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
@@ -71,8 +69,9 @@ void init() {
     sky = DrawableObj::create("sky");
     sunAndMoon = DrawableObj::create("sunAndMoon");
 
-    pipes = new Pipes("topPipe.data", "botPipe.data", -0.01);
-    pipes->createPipe();
+    controller = GameController::getInstance();
+    pipes = Pipes::getInstance(controller, "topPipe.data", "botPipe.data", -0.01);
+    sky = DrawableObj::create("sky");
 }
 
 void display() {
@@ -88,10 +87,6 @@ void idle() {
     pipes->createPipe();
     pipes->updatePipes();
     pipes->checkCollision();
-
-    rotate += 1.f;
-    if (rotate >= 360.f)
-        rotate = 0.f;
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
@@ -118,4 +113,13 @@ void cleanup() {
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
+}
+
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
+                                GLenum severity, GLsizei length,
+                                const GLchar *message, const void *userParam) {
+    fprintf(stderr,
+            "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
+            severity, message);
 }
