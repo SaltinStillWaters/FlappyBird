@@ -2,14 +2,14 @@
 
 #include <GL/freeglut.h>
 #include <iostream>
-#include "Pipes.h"
+
 #include "DrawableObj.h"
+#include "Pipes.h"
 #include "SkyHelpers.h"
 
 DrawableObj *sky;
-DrawableObj *box;
-DrawableObj *box2;
-Pipes* pipes;
+DrawableObj *sunAndMoon;
+Pipes *pipes;
 GLfloat rotate = 0.f;
 
 void display();
@@ -65,21 +65,20 @@ void init() {
                       &DrawableObj::formatVertexColor);
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
                       &DrawableObj::formatVertexColor, false);
+    DrawableObj::type("sunAndMoon", GL_QUADS, "sunAndMoon.data",
+                      &DrawableObj::formatVertexColor);
+
+    sky = DrawableObj::create("sky");
+    sunAndMoon = DrawableObj::create("sunAndMoon");
 
     pipes = new Pipes("topPipe.data", "botPipe.data", -0.01);
     pipes->createPipe();
-    box = DrawableObj::create("square");
-    box2 = DrawableObj::create("square");
-    sky = DrawableObj::create("sky");
-    box2->setScale(0.5);
-    box2->setOffset(0.5, 0.5);
 }
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     sky->draw();
-    box->draw();
-    box2->draw();
+    sunAndMoon->draw();
     pipes->draw();
 
     glFlush();
@@ -89,12 +88,10 @@ void idle() {
     pipes->createPipe();
     pipes->updatePipes();
     pipes->checkCollision();
-    
+
     rotate += 1.f;
     if (rotate >= 360.f)
         rotate = 0.f;
-    box->setRotation(rotate);
-    box2->setRotation(rotate);
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
@@ -106,7 +103,7 @@ void reshape(int width, int height) {
         w = h * 16.f / 9.f;
     else if (w / h < 16.f / 9.f)
         h = w * 9.f / 16.f;
-    glViewport(((GLfloat) width - w) / 2.f, ((GLfloat) height - h) / 2.f, w, h);
+    glViewport(((GLfloat)width - w) / 2.f, ((GLfloat)height - h) / 2.f, w, h);
     DrawableObj::updateScreenDimens(w, h);
 }
 
@@ -116,8 +113,8 @@ void scroll(int button, int dir, int x, int y) {
 
 void cleanup() {
     delete sky;
-    delete box;
-    delete box2;
+    delete sunAndMoon;
+    delete pipes;
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
