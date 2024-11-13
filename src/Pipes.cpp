@@ -72,8 +72,8 @@ bool Pipes::checkCollision() {
         return false;
     }
 
-    if (hitboxes[0]->xRight < -1.f) {
-        std::cout << "Hitbox deleted\n";
+    if (hitboxes[0]->xRight < birdHitbox->xLeft) {
+        //std::cout << "Hitbox deleted\n";
         delete hitboxes[0];
         delete hitboxes[1];
         hitboxes.pop_front();
