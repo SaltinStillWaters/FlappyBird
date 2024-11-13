@@ -37,7 +37,7 @@ private:
     std::deque<DrawableObj*> pipes;
     std::deque<Hitbox*> hitboxes;
 
-    const Hitbox* birdHitbox = new Hitbox(-0.01, 0.01, -5, -5.5);
+    const Hitbox* birdHitbox = new Hitbox(-0.1, 0.0, -5, 5.5);
     GameController* controller;
 
     const GLfloat xDisplacement;

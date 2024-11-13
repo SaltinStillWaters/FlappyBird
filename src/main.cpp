@@ -27,8 +27,8 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 const GLchar *message, const void *userParam);
 
 int main(int argcp, char **argv) {
-    // LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
-    // PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
+    LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
+    PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
 
     glutInit(&argcp, argv);
     glutInitWindowSize(400, 400);
