@@ -16,6 +16,7 @@ add birdHitbox to constructor
 */
 class Pipes {
 public:
+    ~Pipes();
     Pipes() = delete;
     Pipes(const Pipes& obj) = delete;
 
@@ -39,8 +40,6 @@ private:
     const Hitbox* birdHitbox = new Hitbox(-0.01, 0.01, -5, -5.5);
     GameController* controller;
 
-    ArrayBuffer* topPipeVBO;
-    ArrayBuffer* botPipeVBO;
     const GLfloat xDisplacement;
     const GLfloat ySpace;
     static float constexpr pipeWidth = .33814; //temp
@@ -57,7 +56,8 @@ private:
     static std::mutex mtx;
     Pipes(GameController* controller, const std::string& topPipeFilename, const std::string& botPipeFilename, 
           const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
-
+public:
+    
 };
 
 #endif

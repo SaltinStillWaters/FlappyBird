@@ -155,8 +155,8 @@ void DrawableObj::draw() {
         glScalef(minDimens / screenWidth, minDimens / screenHeight, 1.f);
     }
 
-    glScalef(scale, scale, 1.f);
     glRotatef(rotation, 0.f, 0.f, 1.f);
+    glScalef(scale, scale, 1.f);
 
     if (indexBuffer != nullptr) {
         indexBuffer->bind();

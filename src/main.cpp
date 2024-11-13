@@ -7,12 +7,14 @@
 
 #include "Pipes.h"
 #include "DrawableObj.h"
+#include "Pipes.h"
 #include "SkyHelpers.h"
 #include "GameController.h"
 
 DrawableObj *sky;
 Pipes* pipes;
 GameController* controller;
+DrawableObj *sunAndMoon;
 
 void display();
 void init();
@@ -61,6 +63,11 @@ void init() {
                       &DrawableObj::formatVertexColor);
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
                       &DrawableObj::formatVertexColor, false);
+    DrawableObj::type("sunAndMoon", GL_QUADS, "sunAndMoon.data",
+                      &DrawableObj::formatVertexColor);
+
+    sky = DrawableObj::create("sky");
+    sunAndMoon = DrawableObj::create("sunAndMoon");
 
     controller = GameController::getInstance();
     pipes = Pipes::getInstance(controller, "topPipe.data", "botPipe.data", -0.01);
@@ -70,6 +77,7 @@ void init() {
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     sky->draw();
+    sunAndMoon->draw();
     pipes->draw();
 
     glFlush();
@@ -79,7 +87,6 @@ void idle() {
     pipes->createPipe();
     pipes->updatePipes();
     pipes->checkCollision();
-    
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
@@ -91,7 +98,7 @@ void reshape(int width, int height) {
         w = h * 16.f / 9.f;
     else if (w / h < 16.f / 9.f)
         h = w * 9.f / 16.f;
-    glViewport(((GLfloat) width - w) / 2.f, ((GLfloat) height - h) / 2.f, w, h);
+    glViewport(((GLfloat)width - w) / 2.f, ((GLfloat)height - h) / 2.f, w, h);
     DrawableObj::updateScreenDimens(w, h);
 }
 
@@ -101,6 +108,7 @@ void scroll(int button, int dir, int x, int y) {
 
 void cleanup() {
     delete sky;
+    delete sunAndMoon;
     delete pipes;
 
     glDisableClientState(GL_VERTEX_ARRAY);
