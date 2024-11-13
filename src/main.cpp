@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include <mmsystem.h>
 
+#include "Bird.h"
 #include "Pipes.h"
 #include "DrawableObj.h"
 #include "Pipes.h"
@@ -13,6 +14,7 @@
 
 DrawableObj *sky;
 Pipes* pipes;
+Bird* bird;
 GameController* controller;
 DrawableObj *sunAndMoon;
 
@@ -21,6 +23,7 @@ void init();
 void idle();
 void reshape(int width, int height);
 void scroll(int button, int dir, int x, int y);
+void jump(int key, int state, int x, int y);
 void cleanup();
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 GLenum severity, GLsizei length,
@@ -31,7 +34,7 @@ int main(int argcp, char **argv) {
     PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
 
     glutInit(&argcp, argv);
-    glutInitWindowSize(400, 400);
+    glutInitWindowSize(900, 900);
     glutCreateWindow("Window");
 
     if (glewInit() != GLEW_OK) {
@@ -42,16 +45,14 @@ int main(int argcp, char **argv) {
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
     init();
-
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutMouseWheelFunc(scroll);
     glutIdleFunc(idle);
-
+    glutMouseFunc(jump);
     glutMainLoop();
 
     cleanup();
-
     return 0;
 }
 
@@ -72,6 +73,8 @@ void init() {
     controller = GameController::getInstance();
     pipes = Pipes::getInstance(controller, "topPipe.data", "botPipe.data", -0.01);
     sky = DrawableObj::create("sky");
+    bird = new Bird("bird2.data");
+    bird->setSize(0.15f);
 }
 
 void display() {
@@ -79,14 +82,16 @@ void display() {
     sky->draw();
     sunAndMoon->draw();
     pipes->draw();
-
-    glFlush();
+    bird->draw();
+    //bird->draw();
+    glutSwapBuffers();
 }
 
 void idle() {
     pipes->createPipe();
     pipes->updatePipes();
     pipes->checkCollision();
+    bird->update();
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
@@ -102,12 +107,21 @@ void reshape(int width, int height) {
     DrawableObj::updateScreenDimens(w, h);
 }
 
+
 void scroll(int button, int dir, int x, int y) {
     updateSkyColors(sky->getVertexBuffer());
 }
 
+void jump(int key, int state, int x, int y) {
+    if (key == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        bird->jump();
+    }
+}
+
+
 void cleanup() {
     delete sky;
+    delete bird;
     delete sunAndMoon;
     delete pipes;
 
