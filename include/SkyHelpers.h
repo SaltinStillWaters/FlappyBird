@@ -4,11 +4,13 @@
 #include "ColorStruct.h"
 #include "DrawableObj.h"
 
+const GLfloat SKY_CHANGE_DURATION = 50.f;
+
 ColorFloat calcDeltaColor(ColorFloat color1, ColorFloat color2) {
-    GLfloat r = (color2.r - color1.r) / COLOR_CHANGE_DURATION;
-    GLfloat g = (color2.g - color1.g) / COLOR_CHANGE_DURATION;
-    GLfloat b = (color2.b - color1.b) / COLOR_CHANGE_DURATION;
-    GLfloat a = (color2.a - color1.a) / COLOR_CHANGE_DURATION;
+    GLfloat r = (color2.r - color1.r) / SKY_CHANGE_DURATION;
+    GLfloat g = (color2.g - color1.g) / SKY_CHANGE_DURATION;
+    GLfloat b = (color2.b - color1.b) / SKY_CHANGE_DURATION;
+    GLfloat a = (color2.a - color1.a) / SKY_CHANGE_DURATION;
     return {r, g, b, a};
 }
 

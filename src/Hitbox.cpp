@@ -22,11 +22,9 @@ void Hitbox::updateX(float offset) {
 }
 
 bool Hitbox::checkXCollision(const Hitbox& hitbox) const {
-    return (xLeft <= hitbox.xRight && xRight >= hitbox.xLeft) ||
-           (hitbox.xLeft <= xRight && hitbox.xRight >= xLeft);
+    return xLeft <= hitbox.xRight && xRight >= hitbox.xLeft;
 }
 
 bool Hitbox::checkYCollision(const Hitbox& hitbox) const {
-    return (yBot <= hitbox.yTop && yTop >= hitbox.yBot) ||
-           (hitbox.yBot <= yTop && hitbox.yTop >= yBot);
+    return yBot <= hitbox.yTop && yTop >= hitbox.yBot;
 }

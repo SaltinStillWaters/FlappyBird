@@ -1,18 +1,22 @@
-#include "GL/glew.h"
-#include "GL/freeglut.h"
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+
+#include <iostream>
+#include <Windows.h>
+#include <mmsystem.h>
+
 #include "Bird.h"
 #include "Pipes.h"
+#include "DrawableObj.h"
+#include "Pipes.h"
 #include "SkyHelpers.h"
-#include <iostream>
+#include "GameController.h"
 
 DrawableObj *sky;
-DrawableObj *box;
-DrawableObj *box2;
 Pipes* pipes;
 Bird* bird;
-
-GLfloat rotate = 0.f;
-ArrayBuffer* buffer;
+GameController* controller;
+DrawableObj *sunAndMoon;
 
 void display();
 void init();
@@ -26,6 +30,9 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 const GLchar *message, const void *userParam);
 
 int main(int argcp, char **argv) {
+    LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
+    PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
+
     glutInit(&argcp, argv);
     glutInitWindowSize(900, 900);
     glutCreateWindow("Window");
@@ -49,33 +56,23 @@ int main(int argcp, char **argv) {
     return 0;
 }
 
-
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
-                                GLenum severity, GLsizei length,
-                                const GLchar *message, const void *userParam) {
-    fprintf(stderr,
-            "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
-            severity, message);
-}
-
-
 void init() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    DrawableObj::type("square", GL_QUADS, "vertices.data", &DrawableObj::formatVertexColor);
-    DrawableObj::type("sky", GL_QUADS, "skyVertices.data", &DrawableObj::formatVertexColor, false);
+    DrawableObj::type("square", GL_QUADS, "vertices.data",
+                      &DrawableObj::formatVertexColor);
+    DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
+                      &DrawableObj::formatVertexColor, false);
+    DrawableObj::type("sunAndMoon", GL_QUADS, "sunAndMoon.data",
+                      &DrawableObj::formatVertexColor);
 
-    pipes = new Pipes("topPipe.data", "botPipe.data", -0.01f);
-    pipes->createPipe();
-    
-    box = DrawableObj::create("square");
-    box2 = DrawableObj::create("square");
     sky = DrawableObj::create("sky");
-    box2->setScale(0.5);
-    box2->setOffset(0.5, 0.5);
+    sunAndMoon = DrawableObj::create("sunAndMoon");
 
+    controller = GameController::getInstance();
+    pipes = Pipes::getInstance(controller, "topPipe.data", "botPipe.data", -0.01);
+    sky = DrawableObj::create("sky");
     bird = new Bird("bird2.data");
     bird->setSize(0.15f);
 }
@@ -83,8 +80,7 @@ void init() {
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     sky->draw();
-    box->draw();
-    box2->draw();
+    sunAndMoon->draw();
     pipes->draw();
     bird->draw();
     //bird->draw();
@@ -95,16 +91,7 @@ void idle() {
     pipes->createPipe();
     pipes->updatePipes();
     pipes->checkCollision();
-
-    rotate += 1.f;
-    if (rotate >= 360.f)
-        rotate = 0.f;
-
-    box->setRotation(rotate);
-    box2->setRotation(rotate);
-
     bird->update();
-
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
@@ -116,7 +103,7 @@ void reshape(int width, int height) {
         w = h * 16.f / 9.f;
     else if (w / h < 16.f / 9.f)
         h = w * 9.f / 16.f;
-    glViewport(((GLfloat) width - w) / 2.f, ((GLfloat) height - h) / 2.f, w, h);
+    glViewport(((GLfloat)width - w) / 2.f, ((GLfloat)height - h) / 2.f, w, h);
     DrawableObj::updateScreenDimens(w, h);
 }
 
@@ -134,11 +121,19 @@ void jump(int key, int state, int x, int y) {
 
 void cleanup() {
     delete sky;
-    delete box;
-    delete box2;
-    delete pipes;
     delete bird;
+    delete sunAndMoon;
+    delete pipes;
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
+}
+
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
+                                GLenum severity, GLsizei length,
+                                const GLchar *message, const void *userParam) {
+    fprintf(stderr,
+            "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
+            severity, message);
 }

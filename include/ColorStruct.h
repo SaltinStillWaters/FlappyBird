@@ -4,8 +4,6 @@
 #include <GL/glew.h>
 #include <cmath>
 
-const GLfloat COLOR_CHANGE_DURATION = 50.f;
-
 struct ColorUByte {
     GLubyte r;
     GLubyte g;
