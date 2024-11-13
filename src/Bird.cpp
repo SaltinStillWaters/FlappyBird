@@ -4,7 +4,7 @@
 Bird::Bird(const std::string &birdFilename)
 {
     // Define the bird template
-    DrawableObj::type("bird", GL_QUADS, birdFilename, &DrawableObj::formatVertexColor, false);
+    DrawableObj::type("bird", GL_QUADS, "bird2.data", &DrawableObj::formatVertexColor);
 
     // Create the bird object instance
     birdObj = DrawableObj::create("bird");

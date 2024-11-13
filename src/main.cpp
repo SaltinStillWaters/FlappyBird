@@ -76,7 +76,7 @@ void init() {
     box2->setScale(0.5);
     box2->setOffset(0.5, 0.5);
 
-    bird = new Bird("bird.data");
+    bird = new Bird("bird2.data");
     bird->setSize(0.15f);
 }
 
@@ -87,6 +87,7 @@ void display() {
     box2->draw();
     pipes->draw();
     bird->draw();
+    //bird->draw();
     glutSwapBuffers();
 }
 
