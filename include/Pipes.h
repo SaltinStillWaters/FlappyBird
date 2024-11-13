@@ -17,10 +17,8 @@ private:
     std::deque<DrawableObj*> pipes;
     std::deque<Hitbox*> hitboxes;
 
-    const Hitbox* birdHitbox = new Hitbox(-0.5, 0, -0.5, 0.5);
+    const Hitbox* birdHitbox = new Hitbox(-0.2f, 0.2f, 0.5, 0.9);
 
-    ArrayBuffer* topPipeVBO;
-    ArrayBuffer* botPipeVBO;
     const GLfloat xDisplacement;
     const GLfloat ySpace;
     const float pipeWidth = .33814; //temp
@@ -33,7 +31,7 @@ private:
 
 public:
     Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace = 0.3);
-
+    ~Pipes();
     /**
      * These 3 function should be called in the order of: create, update, checkCollision. They should be called in the most frequently called event. (Idle or Timer);
      */
