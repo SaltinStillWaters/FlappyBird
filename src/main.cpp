@@ -83,8 +83,8 @@ void display() {
     sunAndMoon->draw();
     pipes->draw();
     bird->draw();
-    //bird->draw();
-    glutSwapBuffers();
+    
+    glFlush();
 }
 
 void idle() {
