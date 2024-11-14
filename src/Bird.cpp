@@ -1,14 +1,22 @@
 #include "Bird.h"
 #include <iostream>
+#include <cmath>
 
 Bird::Bird(const std::string &birdFilename)
 {
-    // Define the bird template
-    DrawableObj::type("bird", GL_QUADS, "bird2.data", &DrawableObj::formatVertexColor);
+    DrawableObj::type("bird", GL_QUADS, birdFilename, &DrawableObj::formatVertexColor);
 
-    // Create the bird object instance
     birdObj = DrawableObj::create("bird");
-    birdObj->setOffset(-0.5f, yOffset);
+
+    GLfloat const scale = .12f;
+    birdObj->setScale(scale);
+    
+    /*
+        The bird sprite is a square with length = 1, centered at (0, 0).
+        The hitbox is smaller than the bird; thus the emergence of 'reducedScale
+    */
+    GLfloat const reducedScale = scale - .02f;
+    this->hitbox = new Hitbox(-.5f * reducedScale, .5f * reducedScale, -1.f * reducedScale, 1.f * reducedScale);
 }
 
 Bird::~Bird()
@@ -16,50 +24,36 @@ Bird::~Bird()
     delete birdObj;
 }
 
-/*
-* Updates bird position on flight
-*/
+Hitbox* Bird::getHitbox() {
+    return this->hitbox;
+}
+
 void Bird::update()
 {
-    if (fly >= 0.35f)
-    {
-        isFlying = false;
-        fly = 0;
+    //temp. Bird must be stopped by the GameController
+    if (hitbox->yBot <= yMin ||
+        hitbox->yTop >= yMax) {
+            return;
+    }
+    
+    if (std::fabs(ySpd) < std::fabs(maxYSpd)) {
+        ySpd += grav;
     }
 
-    if (isFlying)
-    {
-        if (yOffset < MAX_FLIGHT_HEIGHT - 1.0f)
-        {
-            rotateAngle += rotateAngle >= 45.f ? 0 : 4.f;
-            yOffset += 0.001f * GRAVITY;
-        }
-        fly += JUMP_INCREMENT;
-    }
-    else
-    {
-        if (yOffset > MIN_FLIGHT_HEIGHT)
-        {
-            rotateAngle -= rotateAngle <= -45.f ? 0 : 2.f;
-            yOffset -= 0.002f * GRAVITY;
-        }
-    }
+    hitbox->updateY(ySpd);
+    birdObj->setOffset(0, birdObj->getYOffset() + ySpd);
+    
 
-    birdObj->setRotation(rotateAngle);
-    birdObj->setOffset(-0.5f, yOffset);
 }
 
 void Bird::jump()
 {
-    isFlying = true;
+    if (ySpd < maxYSpdToJump) {
+        ySpd = jumpAcceleration;
+    }
 }
 
 void Bird::draw()
 {
     birdObj->draw();
-}
-
-void Bird::setSize(GLfloat scale)
-{
-    birdObj->setScale(scale);
 }

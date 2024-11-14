@@ -15,8 +15,9 @@
     - may be implemented in a .h file for cleanliness(?)
         * only if deemed necessary
 
-//Mychal
-backend:
-- implement upper and lower bounds
-- throw nessecary exceptions
-- review integration with front-end
+
+----------------------------------------------------------------------------------------------------
+                                            DEBUG List:
+----------------------------------------------------------------------------------------------------
+
+> Program crashes when xDisplacement of pipes is at least -.02

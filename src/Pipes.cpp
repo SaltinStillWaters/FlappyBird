@@ -8,21 +8,21 @@ std::mutex Pipes::mtx;
 
 unsigned int Pipes::updateCount = Pipes::updatesNeeded;
 
-Pipes* Pipes::getInstance(GameController* controller, const std::string& topPipeFilename,
+Pipes* Pipes::getInstance(GameController* controller, const Hitbox* birdHitbox, const std::string& topPipeFilename,
                          const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace) {
         if (instance == nullptr) {
             std::lock_guard<std::mutex> lock(mtx);
             if (instance == nullptr) {
-                instance = new Pipes(controller, topPipeFilename, botPipeFilename, xDisplacement, ySpace);
+                instance = new Pipes(controller, birdHitbox, topPipeFilename, botPipeFilename, xDisplacement, ySpace);
             }
         }
 
         return instance;
     }
 
-Pipes::Pipes(GameController* controller, const std::string& topPipeFilename, 
+Pipes::Pipes(GameController* controller, const Hitbox* birdHitbox, const std::string& topPipeFilename, 
              const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace)
-            : controller(controller), xDisplacement(xDisplacement), ySpace(ySpace) {
+            : controller(controller), xDisplacement(xDisplacement), ySpace(ySpace), birdHitbox(birdHitbox) {
     DrawableObj::type("botPipe", GL_QUADS, botPipeFilename, &DrawableObj::formatVertexColor);
     DrawableObj::type("topPipe", GL_QUADS, topPipeFilename, &DrawableObj::formatVertexColor);
 
@@ -39,6 +39,7 @@ Pipes::~Pipes() {
         pipes.pop_front();
         pipes.pop_front();
     }
+
     while (hitboxes.size() > 0) {
         std::cout << "Hitbox cleanup " << ++j << '\n';
         delete hitboxes[0];
@@ -57,6 +58,7 @@ void Pipes::createPipe() {
         ++Pipes::updateCount;
         return;
     }
+    
     Pipes::updateCount = 0;
 
     GLfloat yOffset = (*distrib)(*randMt) / 50.f;

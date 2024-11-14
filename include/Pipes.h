@@ -20,7 +20,7 @@ public:
     Pipes() = delete;
     Pipes(const Pipes& obj) = delete;
 
-    static Pipes* getInstance(GameController* controller, const std::string& topPipeFilename, const std::string& botPipeFilename,
+    static Pipes* getInstance(GameController* controller, const Hitbox* birdHitbox, const std::string& topPipeFilename, const std::string& botPipeFilename,
                               const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
 
     /**
@@ -37,7 +37,7 @@ private:
     std::deque<DrawableObj*> pipes;
     std::deque<Hitbox*> hitboxes;
 
-    const Hitbox* birdHitbox = new Hitbox(-0.1, 0.0, -5, 5.5);
+    const Hitbox* birdHitbox;
     GameController* controller;
 
     const GLfloat xDisplacement;
@@ -54,7 +54,7 @@ private:
     //Singleton
     static Pipes* instance;
     static std::mutex mtx;
-    Pipes(GameController* controller, const std::string& topPipeFilename, const std::string& botPipeFilename, 
+    Pipes(GameController* controller, const Hitbox* birdHitbox, const std::string& topPipeFilename, const std::string& botPipeFilename, 
           const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
 public:
     

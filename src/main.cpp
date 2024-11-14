@@ -30,8 +30,8 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 const GLchar *message, const void *userParam);
 
 int main(int argcp, char **argv) {
-    LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
-    PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
+    // LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
+    // PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
 
     glutInit(&argcp, argv);
     glutInitWindowSize(900, 900);
@@ -71,10 +71,9 @@ void init() {
     sunAndMoon = DrawableObj::create("sunAndMoon");
 
     controller = GameController::getInstance();
-    pipes = Pipes::getInstance(controller, "topPipe.data", "botPipe.data", -0.01);
+    bird = new Bird("bird.data");
+    pipes = Pipes::getInstance(controller, bird->getHitbox(), "topPipe.data", "botPipe.data", -0.015f, 1.f);
     sky = DrawableObj::create("sky");
-    bird = new Bird("bird2.data");
-    bird->setSize(0.15f);
 }
 
 void display() {
@@ -88,10 +87,10 @@ void display() {
 }
 
 void idle() {
+    bird->update();
     pipes->createPipe();
     pipes->updatePipes();
     pipes->checkCollision();
-    bird->update();
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
