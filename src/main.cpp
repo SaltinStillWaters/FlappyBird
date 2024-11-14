@@ -1,3 +1,30 @@
+// #include <GL/glew.h>
+// #include <iostream>
+// #include <fstream>
+// #include <sstream>
+// using namespace std;
+
+// int main() {
+//     string line;
+//     ifstream in("data/sunAndMoon.data");
+//     ofstream out("data/sunAndMoonFinal.data");
+//     out << fixed;
+//     GLfloat a;
+//     while(getline(in, line)) {
+//         stringstream ss(line);
+//         ss >> a;
+//         out << (a * 3.f / 4.f) << ' ';
+//         ss >> a;
+//         out << (a * 3.f / 4.f) - 1.5 << ' ';
+//         ss >> a;
+//         out << (int) a << ' ';
+//         ss >> a;
+//         out << (int) a << ' ';
+//         ss >> a;
+//         out << (int) a << '\n';
+//     }
+// }
+
 #include <GL/glew.h>
 
 #include <GL/freeglut.h>
@@ -10,7 +37,6 @@
 DrawableObj *sky;
 DrawableObj *sunAndMoon;
 Pipes *pipes;
-GLfloat rotate = 0.f;
 
 void display();
 void init();
@@ -65,11 +91,12 @@ void init() {
                       &DrawableObj::formatVertexColor);
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
                       &DrawableObj::formatVertexColor, false);
-    DrawableObj::type("sunAndMoon", GL_QUADS, "sunAndMoon.data",
+    DrawableObj::type("sunAndMoon", GL_QUADS, "sunAndMoonFinal.data",
                       &DrawableObj::formatVertexColor);
 
     sky = DrawableObj::create("sky");
     sunAndMoon = DrawableObj::create("sunAndMoon");
+    sunAndMoon->setOffset(0.f, -1.5f);
 
     pipes = new Pipes("topPipe.data", "botPipe.data", -0.01);
     pipes->createPipe();
@@ -89,9 +116,6 @@ void idle() {
     pipes->updatePipes();
     pipes->checkCollision();
 
-    rotate += 1.f;
-    if (rotate >= 360.f)
-        rotate = 0.f;
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
@@ -109,6 +133,11 @@ void reshape(int width, int height) {
 
 void scroll(int button, int dir, int x, int y) {
     updateSkyColors(sky->getVertexBuffer());
+    celestialRotation += fmodf(SUN_MOON_CHANGE_DEG, 360);
+    sunAndMoon->setRotation(celestialRotation);
+    
+    celestialScale += celestialCoefficient * SUN_MOON_SCALE_DELTA;
+    sunAndMoon->setScale(celestialScale);
 }
 
 void cleanup() {
