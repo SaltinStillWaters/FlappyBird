@@ -10,7 +10,9 @@ public:
     static GameController* getInstance();
 
     bool getHasCollided() const;
+    bool getHasStarted() const;
     void setHasCollided();
+    void setHasStarted();
     void addScore();
 
     GameController(const GameController& obj) = delete;
@@ -18,6 +20,7 @@ public:
 private:
     bool hasCollided;
     unsigned int score;
+    bool hasStarted;
 
     //Singleton
     static GameController* instance;

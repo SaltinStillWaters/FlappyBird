@@ -46,6 +46,8 @@ Hitbox* Bird::getHitbox() {
 }
 
 void Bird::update() {
+    if (!controller->getHasStarted()) { return; }
+
     if (controller->getHasCollided()) { 
         //so the bird will continue to fall after collision
         if (birdObj->getYOffset() > -2) {
@@ -71,7 +73,9 @@ void Bird::update() {
 }
 
 void Bird::jump() {
-    if (controller->getHasCollided()) { return; }
+    if (!controller->getHasStarted() || controller->getHasCollided()) { 
+        return; 
+    }
 
     if (ySpd < MAX_Y_SPD_TO_JUMP) {
         ySpd = JUMP_ACCELERATION;

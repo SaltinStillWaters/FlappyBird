@@ -122,6 +122,7 @@ void scroll(int button, int dir, int x, int y) {
 void jump(int key, int state, int x, int y) {
     if (key == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         bird->jump();
+        controller->setHasStarted();
     }
 }
 

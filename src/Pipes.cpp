@@ -57,8 +57,10 @@ void Pipes::update() {
     checkCollision();
 }
 void Pipes::createPipe() {
-    if (this->controller->getHasCollided()) { return; }
-
+    if (!controller->getHasStarted() || controller->getHasCollided()) { 
+        return; 
+    }
+    
     if (Pipes::updateCount < Pipes::updatesNeeded) {
         ++Pipes::updateCount;
         return;
@@ -80,7 +82,9 @@ void Pipes::createPipe() {
 }
 
 void Pipes::updatePipes() {
-    if (this->controller->getHasCollided()) { return; }
+    if (!controller->getHasStarted() || controller->getHasCollided()) { 
+        return; 
+    }
 
     for (DrawableObj* obj : pipes) {
         obj->setOffset(obj->getXOffset() + this->xDisplacement, obj->getYOffset());
@@ -99,7 +103,9 @@ void Pipes::updatePipes() {
 }
 
 void Pipes::checkCollision() {
-    if (controller->getHasCollided()) { return; }
+    if (!controller->getHasStarted() || controller->getHasCollided()) { 
+        return; 
+    }
 
     //Y Boundaries Collision
     if (birdHitbox->yTop >= Pipes::Y_MAX ||

@@ -21,6 +21,14 @@ GameController* GameController::getInstance() {
 
 bool GameController::getHasCollided() const { return hasCollided; }
 
+bool GameController::getHasStarted() const {
+    return hasStarted;
+}
+
 void GameController::setHasCollided() { hasCollided = true; }
+
+void GameController::setHasStarted() {
+    hasStarted = true;
+}
 
 void GameController::addScore() { ++score; std::cout << "\nScore: " << score; }
