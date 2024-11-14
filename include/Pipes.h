@@ -35,7 +35,7 @@ private:
 
     const GLfloat xDisplacement;
     const GLfloat ySpace;
-    static float constexpr pipeWidth = .33814; //temp (important)
+    static float constexpr pipeWidth = .33814f * 9.f / 16.f; //temp (important)
 
     static unsigned int constexpr updatesNeeded = 90; //change this as needed
     static unsigned int updateCount;
