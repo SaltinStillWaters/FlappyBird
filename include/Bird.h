@@ -4,6 +4,12 @@
 #include "DrawableObj.h"
 #include "Hitbox.h"
 #include "GameController.h"
+
+/*
+ To do:
+ - Transform this into a singleton
+ - Make necessary members constant
+*/
 class Bird {
 public:
     Bird(const std::string& birdFilename, GameController* controller);
@@ -25,8 +31,11 @@ private:
     GLfloat ySpd = 0;
     GLfloat maxYSpdToJump = .02;
     GLfloat jumpAcceleration = .045;
-    GLfloat yMin = -1;
-    GLfloat yMax = 1;
+
+    GLfloat angle = 0;
+    GLfloat angularSpd = 2;
+    GLfloat maxAngle = 45;
+    GLfloat minAngle = -70;
 };
 
 #endif

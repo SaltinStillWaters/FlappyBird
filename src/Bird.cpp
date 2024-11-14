@@ -44,6 +44,13 @@ void Bird::update() {
 
     hitbox->updateY(ySpd);
     birdObj->setOffset(0, birdObj->getYOffset() + ySpd);
+
+    birdObj->setRotation(angle);
+    
+    //So the bird will stay at 45 degrees longer
+    if (ySpd < maxYSpdToJump && angle > minAngle) {
+        angle -= 5;
+    }
 }
 
 void Bird::jump() {
@@ -51,6 +58,7 @@ void Bird::jump() {
 
     if (ySpd < maxYSpdToJump) {
         ySpd = jumpAcceleration;
+        angle = maxAngle;
     }
 }
 
