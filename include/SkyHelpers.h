@@ -3,8 +3,11 @@
 
 #include "ColorStruct.h"
 #include "DrawableObj.h"
+#include <iostream>
 
 const GLfloat SKY_CHANGE_DURATION = 50.f;
+const GLfloat SUN_MOON_CHANGE_DEG = 180.f / 132.5f;
+const GLfloat SUN_MOON_SCALE_DELTA = 1.f / 132.5f;
 
 ColorFloat calcDeltaColor(ColorFloat color1, ColorFloat color2) {
     GLfloat r = (color2.r - color1.r) / SKY_CHANGE_DURATION;
@@ -15,6 +18,10 @@ ColorFloat calcDeltaColor(ColorFloat color1, ColorFloat color2) {
 }
 
 GLuint skyColorCounter = 0;
+GLfloat celestialRotation = 0.f;
+GLfloat celestialScale = 0.25f;
+GLfloat celestialCoefficient = 1.f;
+GLuint coeffFlag = 0;
 
 const GLuint SKY_COLORS_COUNT = 4;
 ColorFloat skyColors[SKY_COLORS_COUNT][2] = {
@@ -22,7 +29,7 @@ ColorFloat skyColors[SKY_COLORS_COUNT][2] = {
      {20.f / 255.f, 80.f / 255.f, 163.f / 255.f}},
     {{109.f / 255.f, 66.f / 255.f, 93.f / 255.f},
      {255.f / 255.f, 205.f / 255.f, 146.f / 255.f}},
-    {{25.f / 255.f, 16.f / 255.f, 20.f / 255.f},
+    {{0.f / 255.f, 0.f / 255.f, 0.f / 255.f},
      {30.f / 255.f, 10.f / 255.f, 30.f / 255.f}},
     {{234.f / 255.f, 227.f / 255.f, 200.f / 255.f},
      {113.f / 255.f, 156.f / 255.f, 188.f / 255.f}}};
@@ -89,6 +96,12 @@ void updateSkyColors(ArrayBuffer *skyVertexBuffer) {
     }
 
     if (targetColorMatch) {
+        coeffFlag++;
+        if (coeffFlag % 2 == 0) {
+            coeffFlag = 0;
+            celestialCoefficient *= -1;
+        }
+
         skyIndex1 = (skyIndex1 + 1) % SKY_COLORS_COUNT;
         skyIndex2 = (skyIndex2 + 1) % SKY_COLORS_COUNT;
 
