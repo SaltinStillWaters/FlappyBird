@@ -13,7 +13,9 @@
 class Pipes {
 public:
     static float constexpr Y_MIN = -1.f;
-    static float constexpr Y_MAX = 1.f;
+    
+    //top pipe's start at y = 2, so any more and the bird will bypass the pipes
+    static float constexpr Y_MAX = 2.f; 
     
     ~Pipes();
     Pipes() = delete;

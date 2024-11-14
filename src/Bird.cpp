@@ -29,7 +29,14 @@ Hitbox* Bird::getHitbox() {
 }
 
 void Bird::update() {
-    if (controller->getHasCollided()) { return; }
+    if (controller->getHasCollided()) { 
+        //so the bird will continue to fall after collision
+        if (birdObj->getYOffset() > -2) {
+            ySpd = -maxYSpd / 2;
+            birdObj->setOffset(0, birdObj->getYOffset() + ySpd);
+        }
+        return; 
+    }
 
     if (ySpd > -maxYSpd) {
         ySpd += grav;

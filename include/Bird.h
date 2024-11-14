@@ -20,11 +20,11 @@ private:
     Hitbox* hitbox;
     GLfloat rotateAngle = 0.f;
     
-    GLfloat maxYSpd = .2;
-    GLfloat grav = -.001;
+    GLfloat maxYSpd = .1;
+    GLfloat grav = -.002;
     GLfloat ySpd = 0;
-    GLfloat maxYSpdToJump = 0;
-    GLfloat jumpAcceleration = .035;
+    GLfloat maxYSpdToJump = .02;
+    GLfloat jumpAcceleration = .045;
     GLfloat yMin = -1;
     GLfloat yMax = 1;
 };
