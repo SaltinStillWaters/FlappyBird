@@ -1,65 +1,67 @@
 #include "Bird.h"
 #include <iostream>
+#include <cmath>
+#include "Pipes.h"
+#include "GameController.h"
 
-Bird::Bird(const std::string &birdFilename)
-{
-    // Define the bird template
-    DrawableObj::type("bird", GL_QUADS, "bird2.data", &DrawableObj::formatVertexColor);
+Bird::Bird(const std::string &birdFilename, GameController* controller) : controller(controller) {
+    DrawableObj::type("bird", GL_QUADS, birdFilename, &DrawableObj::formatVertexColor);
 
-    // Create the bird object instance
     birdObj = DrawableObj::create("bird");
-    birdObj->setOffset(-0.5f, yOffset);
+
+    GLfloat const scale = .12f;
+    birdObj->setScale(scale);
+    
+    /*
+        The bird sprite is a square with length = 1, centered at (0, 0).
+        The hitbox is smaller than the bird; thus the emergence of 'reducedScale
+    */
+    GLfloat const reducedScale = scale - .03f;
+    this->hitbox = new Hitbox(-.5f * reducedScale, .5f * reducedScale, -1.f * reducedScale, 1.f * reducedScale);
 }
 
-Bird::~Bird()
-{
+Bird::~Bird() {
     delete birdObj;
 }
 
-/*
-* Updates bird position on flight
-*/
-void Bird::update()
-{
-    if (fly >= 0.35f)
-    {
-        isFlying = false;
-        fly = 0;
-    }
-
-    if (isFlying)
-    {
-        if (yOffset < MAX_FLIGHT_HEIGHT - 1.0f)
-        {
-            rotateAngle += rotateAngle >= 45.f ? 0 : 4.f;
-            yOffset += 0.001f * GRAVITY;
-        }
-        fly += JUMP_INCREMENT;
-    }
-    else
-    {
-        if (yOffset > MIN_FLIGHT_HEIGHT)
-        {
-            rotateAngle -= rotateAngle <= -45.f ? 0 : 2.f;
-            yOffset -= 0.002f * GRAVITY;
-        }
-    }
-
-    birdObj->setRotation(rotateAngle);
-    birdObj->setOffset(-0.5f, yOffset);
+Hitbox* Bird::getHitbox() {
+    return this->hitbox;
 }
 
-void Bird::jump()
-{
-    isFlying = true;
+void Bird::update() {
+    if (controller->getHasCollided()) { 
+        //so the bird will continue to fall after collision
+        if (birdObj->getYOffset() > -2) {
+            ySpd = -maxYSpd / 2;
+            birdObj->setOffset(0, birdObj->getYOffset() + ySpd);
+        }
+        return; 
+    }
+
+    if (ySpd > -maxYSpd) {
+        ySpd += grav;
+    }
+
+    hitbox->updateY(ySpd);
+    birdObj->setOffset(0, birdObj->getYOffset() + ySpd);
+
+    birdObj->setRotation(angle);
+    
+    //So the bird will stay at 45 degrees longer
+    if (ySpd < maxYSpdToJump && angle > minAngle) {
+        angle -= 5;
+    }
 }
 
-void Bird::draw()
-{
+void Bird::jump() {
+    if (controller->getHasCollided()) { return; }
+
+    if (ySpd < maxYSpdToJump) {
+        ySpd = jumpAcceleration;
+        angle = maxAngle;
+    }
+}
+
+void Bird::draw() {
     birdObj->draw();
-}
-
-void Bird::setSize(GLfloat scale)
-{
-    birdObj->setScale(scale);
 }
