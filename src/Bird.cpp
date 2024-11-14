@@ -31,19 +31,17 @@ Hitbox* Bird::getHitbox() {
 void Bird::update()
 {
     //temp. Bird must be stopped by the GameController
-    if (hitbox->yBot <= yMin ||
-        hitbox->yTop >= yMax) {
-            return;
-    }
+    // if (hitbox->yBot <= yMin ||
+    //     hitbox->yTop >= yMax) {
+    //         return;
+    // }
     
-    if (std::fabs(ySpd) < std::fabs(maxYSpd)) {
+    if (ySpd > -maxYSpd) {
         ySpd += grav;
     }
 
     hitbox->updateY(ySpd);
     birdObj->setOffset(0, birdObj->getYOffset() + ySpd);
-    
-
 }
 
 void Bird::jump()

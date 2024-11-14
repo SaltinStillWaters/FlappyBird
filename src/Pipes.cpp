@@ -31,6 +31,7 @@ Pipes::Pipes(GameController* controller, const Hitbox* birdHitbox, const std::st
 }
 
 Pipes::~Pipes() {
+    std::cout << "destructor\n";
     int i = 0, j = 0;
     while(pipes.size() > 0) {
         std::cout << "Pipe cleanup " << ++i << '\n';
@@ -50,6 +51,7 @@ Pipes::~Pipes() {
 }
 
 void Pipes::createPipe() {
+    std::cout << "createPipe\n";
     if (this->controller->getHasCollided()) {
         return;
     }
@@ -58,7 +60,7 @@ void Pipes::createPipe() {
         ++Pipes::updateCount;
         return;
     }
-    
+
     Pipes::updateCount = 0;
 
     GLfloat yOffset = (*distrib)(*randMt) / 50.f;
@@ -74,9 +76,8 @@ void Pipes::createPipe() {
 }
 
 void Pipes::updatePipes() {
-    if (this->controller->getHasCollided()) {
-        return;
-    }
+    std::cout << "updatePipe\n";
+    if (this->controller->getHasCollided()) { return; }
 
     for (DrawableObj* obj : pipes) {
         obj->setOffset(obj->getXOffset() + this->xDisplacement, obj->getYOffset());
@@ -104,6 +105,11 @@ void Pipes::checkCollision() {
         return;
     }
 
+    if (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1])) {
+        std::cout << "COLLISION!!!\n";
+        this->controller->setHasCollided();
+    }
+
     if (hitboxes[0]->xRight < birdHitbox->xLeft) {
         controller->addScore();
         //std::cout << "Hitbox deleted\n";
@@ -111,18 +117,11 @@ void Pipes::checkCollision() {
         delete hitboxes[1];
         hitboxes.pop_front();
         hitboxes.pop_front();
-    }
-
-    if (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1])) {
-        //std::cout << "COLLISION!!!\n";
-        this->controller->setHasCollided();
-    }
-    // if (birdHitbox->checkCollision(*hitboxes[0]) || birdHitbox->checkCollision(*hitboxes[1])) {
-    //     std::cout << "COLLISION!!!\n";
-    // }
+    }    
 }
 
 void Pipes::draw() {
+    std::cout << "draw\n";
     for (DrawableObj* obj : pipes) {
         obj->draw();
     }

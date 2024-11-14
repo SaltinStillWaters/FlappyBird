@@ -44,7 +44,7 @@ private:
     const GLfloat ySpace;
     static float constexpr pipeWidth = .33814; //temp
 
-    static unsigned int constexpr updatesNeeded = 120; //change this as needed
+    static unsigned int constexpr updatesNeeded = 90; //change this as needed
     static unsigned int updateCount;
     
     //Random
