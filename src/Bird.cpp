@@ -1,8 +1,25 @@
 #include "Bird.h"
-#include <iostream>
-#include <cmath>
+
 #include "Pipes.h"
 #include "GameController.h"
+
+#include <iostream>
+#include <cmath>
+
+//static members
+Bird* Bird::instance = nullptr;
+std::mutex Bird::mtx;
+
+Bird* Bird::getInstance(const std::string &birdFilename, GameController* controller) {
+    if (instance == nullptr) {
+        std::lock_guard<std::mutex> lock(mtx);
+        if (instance == nullptr) {
+            instance = new Bird(birdFilename, controller);
+        }
+    }
+
+    return instance;
+}
 
 Bird::Bird(const std::string &birdFilename, GameController* controller) : controller(controller) {
     DrawableObj::type("bird", GL_QUADS, birdFilename, &DrawableObj::formatVertexColor);
@@ -32,14 +49,14 @@ void Bird::update() {
     if (controller->getHasCollided()) { 
         //so the bird will continue to fall after collision
         if (birdObj->getYOffset() > -2) {
-            ySpd = -maxYSpd / 2;
+            ySpd = -MAX_Y_SPD / 2;
             birdObj->setOffset(0, birdObj->getYOffset() + ySpd);
         }
         return; 
     }
 
-    if (ySpd > -maxYSpd) {
-        ySpd += grav;
+    if (ySpd > -MAX_Y_SPD) {
+        ySpd += GRAV;
     }
 
     hitbox->updateY(ySpd);
@@ -48,17 +65,17 @@ void Bird::update() {
     birdObj->setRotation(angle);
     
     //So the bird will stay at 45 degrees longer
-    if (ySpd < maxYSpdToJump && angle > minAngle) {
-        angle -= 5;
+    if (ySpd < MAX_Y_SPD_TO_JUMP && angle > MIN_ANGLE) {
+        angle -= ANGULAR_SPD;
     }
 }
 
 void Bird::jump() {
     if (controller->getHasCollided()) { return; }
 
-    if (ySpd < maxYSpdToJump) {
-        ySpd = jumpAcceleration;
-        angle = maxAngle;
+    if (ySpd < MAX_Y_SPD_TO_JUMP) {
+        ySpd = JUMP_ACCELERATION;
+        angle = MAX_ANGLE;
     }
 }
 

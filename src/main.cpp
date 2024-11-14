@@ -76,7 +76,7 @@ void init() {
 
     controller = GameController::getInstance();
 
-    bird = new Bird("bird.data", controller);
+    bird = Bird::getInstance("bird.data", controller);
 
     pipes = Pipes::getInstance(controller, bird->getHitbox(), 
                               "topPipe.data", "botPipe.data", -0.015f, 1.f);

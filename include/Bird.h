@@ -5,6 +5,7 @@
 #include "Hitbox.h"
 #include "GameController.h"
 
+#include <mutex>
 /*
  To do:
  - Transform this into a singleton
@@ -12,8 +13,11 @@
 */
 class Bird {
 public:
-    Bird(const std::string& birdFilename, GameController* controller);
     ~Bird();
+    Bird() = delete;
+    Bird(const Bird& obj) = delete;
+    
+    static Bird* getInstance(const std::string &birdFilename, GameController* controller);
 
     void update();
     void jump();
@@ -24,18 +28,22 @@ private:
     GameController* controller;
     DrawableObj* birdObj;
     Hitbox* hitbox;
-    GLfloat rotateAngle = 0.f;
     
-    GLfloat maxYSpd = .1;
-    GLfloat grav = -.002;
     GLfloat ySpd = 0;
-    GLfloat maxYSpdToJump = .02;
-    GLfloat jumpAcceleration = .045;
+    const GLfloat MAX_Y_SPD = .1;
+    const GLfloat GRAV = -.002;
+    const GLfloat MAX_Y_SPD_TO_JUMP = .02;
+    const GLfloat JUMP_ACCELERATION = .045;
 
     GLfloat angle = 0;
-    GLfloat angularSpd = 2;
-    GLfloat maxAngle = 45;
-    GLfloat minAngle = -70;
+    const GLfloat ANGULAR_SPD = 2;
+    const GLfloat MAX_ANGLE = 45;
+    const GLfloat MIN_ANGLE = -70;
+
+    //Singleton
+    static Bird* instance;
+    static std::mutex mtx;
+    Bird(const std::string &birdFilename, GameController* controller);
 };
 
 #endif
