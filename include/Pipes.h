@@ -14,7 +14,7 @@
 class Pipes {
 public:
     //change to higher value if needed
-    static float constexpr Y_MIN = std::numeric_limits<float>::min();
+    static float constexpr Y_MIN = std::numeric_limits<float>::lowest();
     
     //change to lower value if needed
     static float constexpr Y_MAX = std::numeric_limits<float>::max();
