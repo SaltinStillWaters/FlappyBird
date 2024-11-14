@@ -1,16 +1,17 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
-#include <iostream>
-#include <Windows.h>
-#include <mmsystem.h>
-
 #include "Bird.h"
 #include "Pipes.h"
 #include "DrawableObj.h"
 #include "Pipes.h"
 #include "SkyHelpers.h"
 #include "GameController.h"
+
+#include <iostream>
+#include <Windows.h>
+#include <mmsystem.h>
+
 
 DrawableObj *sky;
 Pipes* pipes;
@@ -30,6 +31,7 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 const GLchar *message, const void *userParam);
 
 int main(int argcp, char **argv) {
+    // Reference for sound. Don't delete yet ty
     // LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
     // PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
 
@@ -45,11 +47,13 @@ int main(int argcp, char **argv) {
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
     init();
+
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutMouseWheelFunc(scroll);
     glutIdleFunc(idle);
     glutMouseFunc(jump);
+
     glutMainLoop();
 
     cleanup();

@@ -33,7 +33,6 @@ Pipes::Pipes(GameController* controller, const Hitbox* birdHitbox, const std::st
 }
 
 Pipes::~Pipes() {
-    std::cout << "destructor\n";
     int i = 0, j = 0;
     while(pipes.size() > 0) {
         std::cout << "Pipe cleanup " << ++i << '\n';
@@ -74,8 +73,10 @@ void Pipes::createPipe() {
     pipes.push_back(DrawableObj::create("topPipe"));
     pipes.back()->setOffset(1.f, yOffset + (ySpace / 2.f));
 
-    hitboxes.push_back(new Hitbox(1, 1 + this->pipeWidth, -1, yOffset - 1.f - (ySpace / 2.f)));
-    hitboxes.push_back(new Hitbox(1, 1 + this->pipeWidth, yOffset - 1.f + (ySpace / 2.f), 1));
+    //Upper and lower boundaries are +- 100, so the bird can not bypass the pipes
+    //by going too high/low
+    hitboxes.push_back(new Hitbox(1, 1 + this->pipeWidth, -100, yOffset - 1.f - (ySpace / 2.f)));
+    hitboxes.push_back(new Hitbox(1, 1 + this->pipeWidth, yOffset - 1.f + (ySpace / 2.f), 100));
 }
 
 void Pipes::updatePipes() {

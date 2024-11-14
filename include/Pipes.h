@@ -8,14 +8,16 @@
 #include <string>
 #include <deque>
 #include <random>
+#include <limits>
 #include <mutex>
 
 class Pipes {
 public:
-    static float constexpr Y_MIN = -1.f;
+    //change to higher value if needed
+    static float constexpr Y_MIN = std::numeric_limits<float>::min();
     
-    //top pipe's start at y = 2, so any more and the bird will bypass the pipes
-    static float constexpr Y_MAX = 2.f; 
+    //change to lower value if needed
+    static float constexpr Y_MAX = std::numeric_limits<float>::max();
     
     ~Pipes();
     Pipes() = delete;
