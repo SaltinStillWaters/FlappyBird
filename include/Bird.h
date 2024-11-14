@@ -3,10 +3,10 @@
 
 #include "DrawableObj.h"
 #include "Hitbox.h"
-
+#include "GameController.h"
 class Bird {
 public:
-    Bird(const std::string& birdFilename);
+    Bird(const std::string& birdFilename, GameController* controller);
     ~Bird();
 
     void update();
@@ -15,6 +15,7 @@ public:
     Hitbox* getHitbox();
 
 private:
+    GameController* controller;
     DrawableObj* birdObj;
     Hitbox* hitbox;
     GLfloat rotateAngle = 0.f;

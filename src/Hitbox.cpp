@@ -10,9 +10,16 @@ Hitbox::Hitbox(float xLeft, float xRight, float yBot, float yTop) {
 }
 
 bool Hitbox::checkCollision(const Hitbox& hitbox) const {
-    // std::cout << "bird: (" << xLeft << ", " << xRight << ", " << yTop << ", " << yBot << ")\n"
-    //           << "hitbox: (" << hitbox.xLeft << ", " << hitbox.xRight << ", " 
-    //           << hitbox.yTop << ", " << hitbox.yBot << ")\n";
+    if (checkXCollision(hitbox) && checkYCollision(hitbox)) {
+        std::cout << "X and Y Collide\n";
+    }
+    if (checkXCollision(hitbox)) {
+        std::cout << "X Collide\n";
+    }
+
+    if (checkYCollision(hitbox)) {
+        std::cout << "Y Collide\n";
+    }
     return (checkXCollision(hitbox) && checkYCollision(hitbox));
 }
 

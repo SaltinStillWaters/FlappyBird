@@ -71,13 +71,16 @@ void init() {
     sunAndMoon = DrawableObj::create("sunAndMoon");
 
     controller = GameController::getInstance();
-    bird = new Bird("bird.data");
-    pipes = Pipes::getInstance(controller, bird->getHitbox(), "topPipe.data", "botPipe.data", -0.015f, 1.f);
-    sky = DrawableObj::create("sky");
+
+    bird = new Bird("bird.data", controller);
+
+    pipes = Pipes::getInstance(controller, bird->getHitbox(), 
+                              "topPipe.data", "botPipe.data", -0.015f, 1.f);
 }
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
+
     sky->draw();
     sunAndMoon->draw();
     pipes->draw();
@@ -88,9 +91,8 @@ void display() {
 
 void idle() {
     bird->update();
-    pipes->createPipe();
-    pipes->updatePipes();
-    pipes->checkCollision();
+    pipes->update();
+
     Sleep(1000 / 60);
     glutPostRedisplay();
 }
@@ -98,10 +100,12 @@ void idle() {
 void reshape(int width, int height) {
     GLfloat w = width;
     GLfloat h = height;
+
     if (w / h > 16.f / 9.f)
         w = h * 16.f / 9.f;
     else if (w / h < 16.f / 9.f)
         h = w * 9.f / 16.f;
+
     glViewport(((GLfloat)width - w) / 2.f, ((GLfloat)height - h) / 2.f, w, h);
     DrawableObj::updateScreenDimens(w, h);
 }
