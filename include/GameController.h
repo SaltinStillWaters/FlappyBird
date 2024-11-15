@@ -30,9 +30,9 @@ private:
     // LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
     // PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
 
-    LPCWSTR addScoreSound = L"sound/addScore.wav"; 
-    LPCWSTR collideSound = L"sound/collide.wav"; 
-    LPCWSTR jumpSound = L"sound/jump.wav"; 
+    LPCWSTR addScoreSound = L"sound/addScoreLowered.wav"; 
+    LPCWSTR collideSound = L"sound/collideLowered.wav"; 
+    LPCWSTR jumpSound = L"sound/jumpLowered.wav"; 
 
     std::vector<Resettable*> resettables;
     bool hasCollided;
