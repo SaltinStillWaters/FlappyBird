@@ -83,7 +83,7 @@ void init() {
     pipes = Pipes::getInstance(controller, bird->getHitbox(), 
                                "topPipe.data", "botPipe.data",
                                -0.015f, 1.f);
-    controller->addResettable(pipes);
+    controller->addResettable (pipes);
 }
 
 void display() {
