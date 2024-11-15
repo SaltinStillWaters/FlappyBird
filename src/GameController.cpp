@@ -3,6 +3,8 @@
 #include "Bird.h"
 
 #include <iostream>
+#include <Windows.h>
+#include <mmsystem.h>
 #include <mutex>
 
 
@@ -26,11 +28,17 @@ bool GameController::getHasCollided() const { return hasCollided; }
 
 bool GameController::getHasStarted() const { return hasStarted; }
 
-void GameController::setHasCollided() { hasCollided = true; }
+void GameController::setHasCollided() { 
+    hasCollided = true; 
+    PlaySoundW(collideSound, 0, SND_FILENAME | SND_ASYNC);
+}
 
 void GameController::setHasStarted() { hasStarted = true; }
 
-void GameController::addScore() { ++score; }
+void GameController::addScore() { 
+    ++score; 
+    PlaySoundW(addScoreSound, 0, SND_FILENAME | SND_ASYNC);
+}
 
 void GameController::addResettable(Resettable* r) {
     resettables.push_back(r);

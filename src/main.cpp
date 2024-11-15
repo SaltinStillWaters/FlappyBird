@@ -10,8 +10,6 @@
 #include "GameController.h"
 
 #include <iostream>
-#include <Windows.h>
-#include <mmsystem.h>
 
 
 DrawableObj *sky;

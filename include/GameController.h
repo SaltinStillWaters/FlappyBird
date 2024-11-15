@@ -4,6 +4,8 @@
 #include "Resettable.h"
 
 #include <vector>
+#include <Windows.h>
+#include <mmsystem.h>
 #include <mutex>
 
 
@@ -25,6 +27,13 @@ public:
 
     static GameController* getInstance();
 private:
+    // LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
+    // PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
+
+    LPCWSTR addScoreSound = L"sound/addScore.wav"; 
+    LPCWSTR collideSound = L"sound/collide.wav"; 
+    LPCWSTR jumpSound = L"sound/jump.wav"; 
+
     std::vector<Resettable*> resettables;
     bool hasCollided;
     unsigned int score;
