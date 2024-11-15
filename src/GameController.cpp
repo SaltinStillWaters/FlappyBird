@@ -37,11 +37,16 @@ void GameController::setHasStarted() { hasStarted = true; }
 
 void GameController::addScore() { 
     ++score; 
+    scoreDisplay->setScore(score);
     PlaySoundW(addScoreSound, 0, SND_FILENAME | SND_ASYNC);
 }
 
 void GameController::addResettable(Resettable* r) {
     resettables.push_back(r);
+}
+
+void GameController::setScoreDisplay(ScoreDisplay* scoreDisplay) {
+    this->scoreDisplay = scoreDisplay;
 }
 
 void GameController::reset() {

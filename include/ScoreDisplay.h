@@ -4,17 +4,29 @@
 #include "DrawableObj.h"
 #include <deque>
 #include <string>
+#include <mutex>
 
 class ScoreDisplay {
 public:
-    ScoreDisplay();
+    void draw() const;
+    void setScore(int score);
 
-    void display();
-    void draw();
-
+    //Singleton
+    static ScoreDisplay* getInstance();
+    ScoreDisplay(const ScoreDisplay& obj) = delete;
 private:
-    int score = 1235;
+    int score = 0;
+    GLfloat const spacing = .15f;
     std::deque<DrawableObj*> drawableDigits;
+    
+    void clearDeque();
+    void updateScore();
+
+    //Singleton
+    static ScoreDisplay* instance;
+    static std::mutex mtx;
+    
+    ScoreDisplay();
 };
 
 #endif // SCOREDISPLAY_H

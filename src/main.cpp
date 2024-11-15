@@ -81,7 +81,8 @@ void init() {
                                -0.015f, 1.f);
     controller->addResettable (pipes);
 
-    scoreDisplay = new ScoreDisplay();
+    scoreDisplay = ScoreDisplay::getInstance();
+    controller->setScoreDisplay(scoreDisplay);
 }
 
 void display() {

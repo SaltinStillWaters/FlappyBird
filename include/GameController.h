@@ -2,7 +2,7 @@
 #define GAME_CONTROLLER_H
 
 #include "Resettable.h"
-
+#include "ScoreDisplay.h"
 #include <vector>
 #include <Windows.h>
 #include <mmsystem.h>
@@ -19,6 +19,7 @@ public:
     void addScore();
 
     void addResettable(Resettable* r);
+    void setScoreDisplay(ScoreDisplay*);
 
     void clickHandler();
 
@@ -27,14 +28,15 @@ public:
 
     static GameController* getInstance();
 private:
-    LPCWSTR addScoreSound = L"sound/addScoreLowered.wav"; 
-    LPCWSTR collideSound = L"sound/collideLowered.wav"; 
-    LPCWSTR jumpSound = L"sound/jumpLowered.wav"; 
-
     std::vector<Resettable*> resettables;
+    ScoreDisplay* scoreDisplay;
     bool hasCollided;
     unsigned int score;
     bool hasStarted;
+
+    LPCWSTR addScoreSound = L"sound/addScoreLowered.wav"; 
+    LPCWSTR collideSound = L"sound/collideLowered.wav"; 
+    LPCWSTR jumpSound = L"sound/jumpLowered.wav"; 
 
     void reset();
 
