@@ -10,6 +10,11 @@ Hitbox::Hitbox(float xLeft, float xRight, float yBot, float yTop) {
     this->yTop = yTop;
 }
 
+void Hitbox::setXLeft(float xLeft) { this->xLeft = xLeft; }
+void Hitbox::setXRight(float xRight) { this->xRight = xRight; }
+void Hitbox::setYBot(float yBot) { this->yBot = yBot; }
+void Hitbox::setYTop(float yTop) { this->yTop = yTop; }
+
 bool Hitbox::checkCollision(const Hitbox& hitbox) const {
     return (checkXCollision(hitbox) && checkYCollision(hitbox));
 }

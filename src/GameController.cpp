@@ -1,7 +1,10 @@
+#include "GameController.h"
+
+#include "Bird.h"
+
 #include <iostream>
 #include <mutex>
 
-#include "GameController.h"
 
 GameController* GameController::instance = nullptr;
 std::mutex GameController::mtx;
@@ -21,14 +24,28 @@ GameController* GameController::getInstance() {
 
 bool GameController::getHasCollided() const { return hasCollided; }
 
-bool GameController::getHasStarted() const {
-    return hasStarted;
-}
+bool GameController::getHasStarted() const { return hasStarted; }
 
 void GameController::setHasCollided() { hasCollided = true; }
 
-void GameController::setHasStarted() {
-    hasStarted = true;
+void GameController::setHasStarted() { hasStarted = true; }
+
+void GameController::addScore() { ++score; }
+
+void GameController::addResettable(Resettable* r) {
+    resettables.push_back(r);
 }
 
-void GameController::addScore() { ++score; std::cout << "\nScore: " << score; }
+void GameController::reset() {
+    hasStarted = false;
+    hasCollided = false;
+
+    for (Resettable* r : resettables) {
+        r->reset();
+    }
+}
+
+void GameController::clickHandler() {
+    if      (!hasStarted) { hasStarted = true; }
+    else if (hasCollided) { reset(); }
+}

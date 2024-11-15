@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
+#include "Resettable.h"
 #include "Bird.h"
 #include "Pipes.h"
 #include "DrawableObj.h"
@@ -77,9 +78,12 @@ void init() {
     controller = GameController::getInstance();
 
     bird = Bird::getInstance("bird.data", controller);
+    controller->addResettable(bird);
 
     pipes = Pipes::getInstance(controller, bird->getHitbox(), 
-                              "topPipe.data", "botPipe.data", -0.015f, 1.f);
+                               "topPipe.data", "botPipe.data",
+                               -0.015f, 1.f);
+    controller->addResettable(pipes);
 }
 
 void display() {
@@ -122,7 +126,7 @@ void scroll(int button, int dir, int x, int y) {
 void jump(int key, int state, int x, int y) {
     if (key == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         bird->jump();
-        controller->setHasStarted();
+        controller->clickHandler();
     }
 }
 

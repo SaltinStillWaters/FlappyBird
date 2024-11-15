@@ -10,6 +10,7 @@
 Bird* Bird::instance = nullptr;
 std::mutex Bird::mtx;
 
+
 Bird* Bird::getInstance(const std::string &birdFilename, GameController* controller) {
     if (instance == nullptr) {
         std::lock_guard<std::mutex> lock(mtx);
@@ -23,27 +24,21 @@ Bird* Bird::getInstance(const std::string &birdFilename, GameController* control
 
 Bird::Bird(const std::string &birdFilename, GameController* controller) : controller(controller) {
     DrawableObj::type("bird", GL_QUADS, birdFilename, &DrawableObj::formatVertexColor);
-
     birdObj = DrawableObj::create("bird");
 
-    GLfloat const scale = .12f;
-    birdObj->setScale(scale);
+    birdObj->setScale(Bird::BIRD_SCALE);
     
-    /*
-        The bird sprite is a square with length = 1, centered at (0, 0).
-        The hitbox is smaller than the bird; thus the emergence of 'reducedScale
-    */
-    GLfloat const reducedScale = scale - .03f;
-    this->hitbox = new Hitbox(-.5f * reducedScale, .5f * reducedScale, -1.f * reducedScale, 1.f * reducedScale);
+    this->hitbox = new Hitbox(-.5f * Bird::HITBOX_SCALE, .5f * Bird::HITBOX_SCALE,
+                              -1.f * Bird::HITBOX_SCALE, 1.f * Bird::HITBOX_SCALE);
 }
 
-Bird::~Bird() {
-    delete birdObj;
+Bird::~Bird() { 
+    delete birdObj; 
+    delete hitbox;
+    delete Bird::instance;
 }
 
-Hitbox* Bird::getHitbox() {
-    return this->hitbox;
-}
+Hitbox* Bird::getHitbox() { return hitbox; }
 
 void Bird::update() {
     if (!controller->getHasStarted()) { return; }
@@ -85,4 +80,17 @@ void Bird::jump() {
 
 void Bird::draw() {
     birdObj->draw();
+}
+
+void Bird::reset() {
+    ySpd = 0;
+    angle = 0;
+
+    hitbox->setXLeft(-0.5f * Bird::HITBOX_SCALE);
+    hitbox->setXRight(0.5f * Bird::HITBOX_SCALE);
+    hitbox->setYBot(-1.0f * Bird::HITBOX_SCALE);
+    hitbox->setYTop(1.0f * Bird::HITBOX_SCALE);
+
+    birdObj->setOffset(0, 0);
+    birdObj->setRotation(0);
 }

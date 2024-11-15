@@ -1,29 +1,30 @@
 #ifndef BIRD_H
 #define BIRD_H
 
+#include "Resettable.h"
 #include "DrawableObj.h"
 #include "Hitbox.h"
 #include "GameController.h"
 
 #include <mutex>
-/*
- To do:
- - Transform this into a singleton
- - Make necessary members constant
-*/
-class Bird {
+
+
+class Bird : public Resettable {
 public:
+    void update();
+    void jump();
+    void draw();
+
+    Hitbox* getHitbox();
+
+    void reset() override;
+
+    //Singleton
     ~Bird();
     Bird() = delete;
     Bird(const Bird& obj) = delete;
     
     static Bird* getInstance(const std::string &birdFilename, GameController* controller);
-
-    void update();
-    void jump();
-    void draw();
-    Hitbox* getHitbox();
-
 private:
     GameController* controller;
     DrawableObj* birdObj;
@@ -39,6 +40,9 @@ private:
     const GLfloat ANGULAR_SPD = 2;
     const GLfloat MAX_ANGLE = 45;
     const GLfloat MIN_ANGLE = -70;
+
+    static GLfloat constexpr BIRD_SCALE = .12f;
+    static GLfloat constexpr HITBOX_SCALE = BIRD_SCALE - .03f;
 
     //Singleton
     static Bird* instance;

@@ -49,6 +49,10 @@ Pipes::~Pipes() {
         hitboxes.pop_front();
         hitboxes.pop_front();
     }
+
+    delete randMt;
+    delete distrib;
+    delete Pipes::instance;
 }
 
 void Pipes::update() {
@@ -137,4 +141,18 @@ void Pipes::draw() {
     for (DrawableObj* obj : pipes) {
         obj->draw();
     }
+}
+
+void Pipes::reset() {
+    while(pipes.size() > 0) {
+        delete pipes[0];
+        pipes.pop_front();
+    }
+
+    while (hitboxes.size() > 0) {
+        delete hitboxes[0];
+        hitboxes.pop_front();
+    }
+
+    Pipes::updateCount = Pipes::updatesNeeded;
 }
