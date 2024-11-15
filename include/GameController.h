@@ -27,9 +27,6 @@ public:
 
     static GameController* getInstance();
 private:
-    // LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
-    // PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
-
     LPCWSTR addScoreSound = L"sound/addScoreLowered.wav"; 
     LPCWSTR collideSound = L"sound/collideLowered.wav"; 
     LPCWSTR jumpSound = L"sound/jumpLowered.wav"; 

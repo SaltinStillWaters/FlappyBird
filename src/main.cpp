@@ -8,6 +8,7 @@
 #include "Pipes.h"
 #include "SkyHelpers.h"
 #include "GameController.h"
+#include "ScoreDisplay.h"
 
 #include <iostream>
 
@@ -17,6 +18,7 @@ Pipes* pipes;
 Bird* bird;
 GameController* controller;
 DrawableObj *sunAndMoon;
+ScoreDisplay* scoreDisplay;
 
 void display();
 void init();
@@ -30,10 +32,6 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 const GLchar *message, const void *userParam);
 
 int main(int argcp, char **argv) {
-    // Reference for sound. Don't delete yet ty
-    // LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
-    // PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
-
     glutInit(&argcp, argv);
     glutInitWindowSize(900, 900);
     glutCreateWindow("Window");
@@ -82,6 +80,8 @@ void init() {
                                "topPipe.data", "botPipe.data",
                                -0.015f, 1.f);
     controller->addResettable (pipes);
+
+    scoreDisplay = new ScoreDisplay();
 }
 
 void display() {
@@ -91,7 +91,8 @@ void display() {
     sunAndMoon->draw();
     pipes->draw();
     bird->draw();
-    
+    scoreDisplay->draw();
+
     glFlush();
 }
 
