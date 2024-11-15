@@ -31,7 +31,6 @@ private:
     std::vector<Resettable*> resettables;
     ScoreDisplay* scoreDisplay;
     bool hasCollided;
-    unsigned int score;
     bool hasStarted;
 
     LPCWSTR addScoreSound = L"sound/addScoreLowered.wav"; 

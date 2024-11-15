@@ -2,14 +2,18 @@
 #define SCOREDISPLAY_H
 
 #include "DrawableObj.h"
+#include "Resettable.h"
+
 #include <deque>
 #include <string>
 #include <mutex>
 
-class ScoreDisplay {
+class ScoreDisplay : public Resettable {
 public:
     void draw() const;
-    void setScore(int score);
+    void setScore();
+
+    void reset() override;
 
     //Singleton
     static ScoreDisplay* getInstance();

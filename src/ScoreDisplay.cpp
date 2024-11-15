@@ -1,4 +1,7 @@
 #include "ScoreDisplay.h"
+
+#include "Resettable.h"
+
 #include <iostream>
 #include <mutex>
 
@@ -26,6 +29,8 @@ ScoreDisplay::ScoreDisplay() {
         DrawableObj::type(str, GL_QUADS, filename,
                           &DrawableObj::formatVertexColor);
     }
+
+    updateScore();
 }
 
 void ScoreDisplay::updateScore() {
@@ -84,9 +89,15 @@ void ScoreDisplay::draw() const {
     }
 }
 
-void ScoreDisplay::setScore(int score) {
-    this->score = score;
+void ScoreDisplay::setScore() {
+    ++score;
 
+    clearDeque();
+    updateScore();
+}
+
+void ScoreDisplay::reset() {
+    score = 0;
     clearDeque();
     updateScore();
 }

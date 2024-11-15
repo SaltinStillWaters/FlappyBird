@@ -11,7 +11,7 @@
 GameController* GameController::instance = nullptr;
 std::mutex GameController::mtx;
 
-GameController::GameController() : hasCollided(false), score(0) {}
+GameController::GameController() : hasCollided(false) {}
 
 GameController* GameController::getInstance() {
     if (instance == nullptr) {
@@ -36,8 +36,7 @@ void GameController::setHasCollided() {
 void GameController::setHasStarted() { hasStarted = true; }
 
 void GameController::addScore() { 
-    ++score; 
-    scoreDisplay->setScore(score);
+    scoreDisplay->setScore();
     PlaySoundW(addScoreSound, 0, SND_FILENAME | SND_ASYNC);
 }
 
@@ -47,6 +46,7 @@ void GameController::addResettable(Resettable* r) {
 
 void GameController::setScoreDisplay(ScoreDisplay* scoreDisplay) {
     this->scoreDisplay = scoreDisplay;
+    addResettable(scoreDisplay);
 }
 
 void GameController::reset() {
