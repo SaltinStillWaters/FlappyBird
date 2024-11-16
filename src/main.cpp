@@ -1,30 +1,3 @@
-// #include <GL/glew.h>
-// #include <iostream>
-// #include <fstream>
-// #include <sstream>
-// using namespace std;
-
-// int main() {
-//     string line;
-//     ifstream in("data/sunAndMoon.data");
-//     ofstream out("data/sunAndMoonFinal.data");
-//     out << fixed;
-//     GLfloat a;
-//     while(getline(in, line)) {
-//         stringstream ss(line);
-//         ss >> a;
-//         out << (a * 3.f / 4.f) << ' ';
-//         ss >> a;
-//         out << (a * 3.f / 4.f) - 1.5 << ' ';
-//         ss >> a;
-//         out << (int) a << ' ';
-//         ss >> a;
-//         out << (int) a << ' ';
-//         ss >> a;
-//         out << (int) a << '\n';
-//     }
-// }
-
 #include <GL/glew.h>
 
 #include <GL/freeglut.h>
@@ -34,6 +7,7 @@
 #include "Pipes.h"
 #include "SkyHelpers.h"
 
+std::vector<std::pair<DrawableObj *, GLfloat>> stars;
 DrawableObj *sky;
 DrawableObj *sunAndMoon;
 Pipes *pipes;
@@ -87,16 +61,28 @@ void init() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    DrawableObj::type("square", GL_QUADS, "vertices.data",
-                      &DrawableObj::formatVertexColor);
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
                       &DrawableObj::formatVertexColor, false);
-    DrawableObj::type("sunAndMoon", GL_QUADS, "sunAndMoonFinal.data",
+    DrawableObj::type("sunAndMoon", GL_QUADS, "sunAndMoon.data",
                       &DrawableObj::formatVertexColor);
+    DrawableObj::type("star", GL_POLYGON, "star.data",
+                      &DrawableObj::formatVertexColor);
+
+    // Generating stars with random positions.
+    srand(time(0));
+    for (int i = 0; i < STAR_COUNT; i++) {
+        GLfloat x = (rand() % 100) / 50.f - 1.f;
+        GLfloat y = (rand() % 100) / 50.f - 1.f;
+        GLfloat starScale = (rand() % 100) / 200.f;
+        stars.push_back({DrawableObj::create("star"), starScale});
+        stars[i].first->setOffset(x, y);
+        stars[i].first->setScale(0.f);
+    }
 
     sky = DrawableObj::create("sky");
     sunAndMoon = DrawableObj::create("sunAndMoon");
     sunAndMoon->setOffset(0.f, -1.5f);
+    sunAndMoon->setScale(1.25f);
 
     pipes = new Pipes("topPipe.data", "botPipe.data", -0.01);
     pipes->createPipe();
@@ -104,8 +90,14 @@ void init() {
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
+
     sky->draw();
+
+    for (const std::pair<DrawableObj *, GLfloat> &star : stars)
+        star.first->draw();
+
     sunAndMoon->draw();
+
     pipes->draw();
 
     glFlush();
@@ -132,12 +124,17 @@ void reshape(int width, int height) {
 }
 
 void scroll(int button, int dir, int x, int y) {
-    updateSkyColors(sky->getVertexBuffer());
-    celestialRotation += fmodf(SUN_MOON_CHANGE_DEG, 360);
+    scrollCounter = ((scrollCounter + dir * 1) % ((GLint)SKY_CHANGE_DURATION) +
+                     ((GLint)SKY_CHANGE_DURATION)) %
+                    ((GLint)SKY_CHANGE_DURATION);
+
+    updateSky(sky->getVertexBuffer(), dir);
     sunAndMoon->setRotation(celestialRotation);
-    
-    celestialScale += celestialCoefficient * SUN_MOON_SCALE_DELTA;
     sunAndMoon->setScale(celestialScale);
+
+    for (const std::pair<DrawableObj *, GLfloat> &star : stars) {
+        star.first->setScale(star.second * starMult);
+    }
 }
 
 void cleanup() {
