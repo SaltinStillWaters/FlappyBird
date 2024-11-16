@@ -37,22 +37,17 @@ Pipes::~Pipes() {
     while(pipes.size() > 0) {
         std::cout << "Pipe cleanup " << ++i << '\n';
         delete pipes[0];
-        delete pipes[1];
-        pipes.pop_front();
         pipes.pop_front();
     }
 
     while (hitboxes.size() > 0) {
         std::cout << "Hitbox cleanup " << ++j << '\n';
         delete hitboxes[0];
-        delete hitboxes[1];
-        hitboxes.pop_front();
         hitboxes.pop_front();
     }
 
     delete randMt;
     delete distrib;
-    delete Pipes::instance;
 }
 
 void Pipes::update() {
