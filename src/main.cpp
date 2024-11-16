@@ -173,6 +173,8 @@ void cleanup() {
     delete sunAndMoon;
     delete ground;
     delete pipes;
+    delete controller;
+    delete scoreDisplay;
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
