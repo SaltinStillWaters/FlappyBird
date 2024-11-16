@@ -35,7 +35,6 @@ Bird::Bird(const std::string &birdFilename, GameController* controller) : contro
 Bird::~Bird() { 
     delete birdObj; 
     delete hitbox;
-    delete Bird::instance;
 }
 
 Hitbox* Bird::getHitbox() { return hitbox; }
