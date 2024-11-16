@@ -10,6 +10,7 @@
 std::vector<std::pair<DrawableObj *, GLfloat>> stars;
 DrawableObj *sky;
 DrawableObj *sunAndMoon;
+DrawableObj *ground;
 Pipes *pipes;
 
 void display();
@@ -67,6 +68,8 @@ void init() {
                       &DrawableObj::formatVertexColor);
     DrawableObj::type("star", GL_POLYGON, "star.data",
                       &DrawableObj::formatVertexColor);
+    DrawableObj::type("ground", GL_TRIANGLE_FAN, "ground.data",
+                      &DrawableObj::formatVertexOnly, false);
 
     // Generating stars with random positions.
     srand(time(0));
@@ -83,6 +86,8 @@ void init() {
     sunAndMoon = DrawableObj::create("sunAndMoon");
     sunAndMoon->setOffset(0.f, -1.5f);
     sunAndMoon->setScale(1.25f);
+    ground = DrawableObj::create("ground");
+    ground->setPlainColor(ColorUByte({24, 145, 68}));
 
     pipes = new Pipes("topPipe.data", "botPipe.data", -0.01);
     pipes->createPipe();
@@ -97,6 +102,8 @@ void display() {
         star.first->draw();
 
     sunAndMoon->draw();
+
+    ground->draw();
 
     pipes->draw();
 
@@ -140,6 +147,7 @@ void scroll(int button, int dir, int x, int y) {
 void cleanup() {
     delete sky;
     delete sunAndMoon;
+    delete ground;
     delete pipes;
 
     glDisableClientState(GL_VERTEX_ARRAY);
