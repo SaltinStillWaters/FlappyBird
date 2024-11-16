@@ -6,9 +6,6 @@
 #include "Hitbox.h"
 #include "GameController.h"
 
-#include <mutex>
-
-
 class Bird : public Resettable {
 public:
     void update();
@@ -46,7 +43,6 @@ private:
 
     //Singleton
     static Bird* instance;
-    static std::mutex mtx;
     Bird(const std::string &birdFilename, GameController* controller);
 };
 

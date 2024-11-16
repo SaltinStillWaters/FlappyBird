@@ -8,15 +8,11 @@
 
 //static members
 Bird* Bird::instance = nullptr;
-std::mutex Bird::mtx;
 
 
 Bird* Bird::getInstance(const std::string &birdFilename, GameController* controller) {
     if (instance == nullptr) {
-        std::lock_guard<std::mutex> lock(mtx);
-        if (instance == nullptr) {
-            instance = new Bird(birdFilename, controller);
-        }
+        instance = new Bird(birdFilename, controller);
     }
 
     return instance;

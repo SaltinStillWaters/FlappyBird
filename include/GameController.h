@@ -6,7 +6,6 @@
 #include <vector>
 #include <Windows.h>
 #include <mmsystem.h>
-#include <mutex>
 
 
 class GameController {
@@ -41,7 +40,6 @@ private:
 
     //Singleton
     static GameController* instance;
-    static std::mutex mtx;
 
     GameController();
 };

@@ -3,21 +3,15 @@
 #include "Resettable.h"
 
 #include <iostream>
-#include <mutex>
 
 
 //static members
 ScoreDisplay* ScoreDisplay::instance = nullptr;
-std::mutex ScoreDisplay::mtx;
 
 ScoreDisplay *ScoreDisplay::getInstance() {
     if (instance == nullptr) {
-        std::lock_guard<std::mutex> lock(mtx);
-        if (instance == nullptr) {
-            instance = new ScoreDisplay();
-        }
+        instance = new ScoreDisplay();
     }
-
     return instance;
 }
 

@@ -5,22 +5,16 @@
 #include <iostream>
 #include <Windows.h>
 #include <mmsystem.h>
-#include <mutex>
 
 
 GameController* GameController::instance = nullptr;
-std::mutex GameController::mtx;
 
 GameController::GameController() : hasCollided(false) {}
 
 GameController* GameController::getInstance() {
     if (instance == nullptr) {
-        std::lock_guard<std::mutex> lock(mtx);
-        if (instance == nullptr) {
-            instance = new GameController();
-        }
+        instance = new GameController();
     }
-
     return instance;
 }
 

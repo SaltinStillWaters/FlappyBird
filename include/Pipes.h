@@ -9,7 +9,6 @@
 #include <deque>
 #include <random>
 #include <limits>
-#include <mutex>
 
 class Pipes : public Resettable {
 public:
@@ -60,7 +59,6 @@ private:
 
     //Singleton
     static Pipes* instance;
-    static std::mutex mtx;
 
     Pipes(GameController* controller, const Hitbox* birdHitbox, const std::string& topPipeFilename,
           const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace = 0.5);

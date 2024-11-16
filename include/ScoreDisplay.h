@@ -6,7 +6,6 @@
 
 #include <deque>
 #include <string>
-#include <mutex>
 
 class ScoreDisplay : public Resettable {
 public:
@@ -31,7 +30,6 @@ private:
 
     //Singleton
     static ScoreDisplay* instance;
-    static std::mutex mtx;
     
     ScoreDisplay();
 };

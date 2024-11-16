@@ -1,11 +1,9 @@
 #include "Pipes.h"
 
 #include <iostream>
-#include <mutex>
 
 //static members
 Pipes* Pipes::instance = nullptr;
-std::mutex Pipes::mtx;
 
 unsigned int Pipes::updateCount = Pipes::updatesNeeded;
 
@@ -13,12 +11,8 @@ unsigned int Pipes::updateCount = Pipes::updatesNeeded;
 Pipes* Pipes::getInstance(GameController* controller, const Hitbox* birdHitbox, const std::string& topPipeFilename,
                          const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace) {
     if (instance == nullptr) {
-        std::lock_guard<std::mutex> lock(mtx);
-        if (instance == nullptr) {
-            instance = new Pipes(controller, birdHitbox, topPipeFilename, botPipeFilename, xDisplacement, ySpace);
-        }
+        instance = new Pipes(controller, birdHitbox, topPipeFilename, botPipeFilename, xDisplacement, ySpace);
     }
-
     return instance;
 }
 
