@@ -13,12 +13,14 @@
 #include <iostream>
 
 
+std::vector<std::pair<DrawableObj *, GLfloat>> stars;
 DrawableObj *sky;
 Pipes* pipes;
 Bird* bird;
 GameController* controller;
 DrawableObj *sunAndMoon;
 ScoreDisplay* scoreDisplay;
+DrawableObj *ground;
 
 void display();
 void init();
@@ -61,15 +63,32 @@ void init() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    DrawableObj::type("square", GL_QUADS, "vertices.data",
-                      &DrawableObj::formatVertexColor);
     DrawableObj::type("sky", GL_QUADS, "skyVertices.data",
                       &DrawableObj::formatVertexColor, false);
     DrawableObj::type("sunAndMoon", GL_QUADS, "sunAndMoon.data",
                       &DrawableObj::formatVertexColor);
+    DrawableObj::type("star", GL_POLYGON, "star.data",
+                      &DrawableObj::formatVertexColor);
+    DrawableObj::type("ground", GL_TRIANGLE_FAN, "ground.data",
+                      &DrawableObj::formatVertexOnly, false);
+
+    // Generating stars with random positions.
+    srand(time(0));
+    for (int i = 0; i < STAR_COUNT; i++) {
+        GLfloat x = (rand() % 100) / 50.f - 1.f;
+        GLfloat y = (rand() % 100) / 50.f - 1.f;
+        GLfloat starScale = (rand() % 100) / 200.f;
+        stars.push_back({DrawableObj::create("star"), starScale});
+        stars[i].first->setOffset(x, y);
+        stars[i].first->setScale(0.f);
+    }
 
     sky = DrawableObj::create("sky");
     sunAndMoon = DrawableObj::create("sunAndMoon");
+    sunAndMoon->setOffset(0.f, -1.5f);
+    sunAndMoon->setScale(1.25f);
+    ground = DrawableObj::create("ground");
+    ground->setPlainColor(ColorUByte({24, 145, 68}));
 
     controller = GameController::getInstance();
 
@@ -89,7 +108,14 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     sky->draw();
+
+    for (const std::pair<DrawableObj *, GLfloat> &star : stars)
+        star.first->draw();
+
     sunAndMoon->draw();
+
+    ground->draw();
+
     pipes->draw();
     bird->draw();
     scoreDisplay->draw();
@@ -120,7 +146,17 @@ void reshape(int width, int height) {
 
 
 void scroll(int button, int dir, int x, int y) {
-    updateSkyColors(sky->getVertexBuffer());
+    scrollCounter = ((scrollCounter + dir * 1) % ((GLint)SKY_CHANGE_DURATION) +
+                     ((GLint)SKY_CHANGE_DURATION)) %
+                    ((GLint)SKY_CHANGE_DURATION);
+
+    updateSky(sky->getVertexBuffer(), dir);
+    sunAndMoon->setRotation(celestialRotation);
+    sunAndMoon->setScale(celestialScale);
+
+    for (const std::pair<DrawableObj *, GLfloat> &star : stars) {
+        star.first->setScale(star.second * starMult);
+    }
 }
 
 void jump(int key, int state, int x, int y) {
@@ -135,6 +171,7 @@ void cleanup() {
     delete sky;
     delete bird;
     delete sunAndMoon;
+    delete ground;
     delete pipes;
 
     glDisableClientState(GL_VERTEX_ARRAY);
