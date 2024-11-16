@@ -11,7 +11,7 @@
 #include <limits>
 #include <mutex>
 
-class Pipes {
+class Pipes : public Resettable {
 public:
     //change to higher value if needed
     static float constexpr Y_MIN = std::numeric_limits<float>::lowest();
@@ -19,6 +19,12 @@ public:
     //change to lower value if needed
     static float constexpr Y_MAX = std::numeric_limits<float>::max();
     
+    void update();
+    void draw();
+    
+    void reset() override;
+
+    //Singleton
     ~Pipes();
     Pipes() = delete;
     Pipes(const Pipes& obj) = delete;
@@ -26,9 +32,6 @@ public:
     static Pipes* getInstance(GameController* controller, const Hitbox* birdHitbox,
                               const std::string& topPipeFilename, const std::string& botPipeFilename,
                               const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
-
-    void update();
-    void draw();
 
 private:
     std::deque<DrawableObj*> pipes;
@@ -58,8 +61,9 @@ private:
     //Singleton
     static Pipes* instance;
     static std::mutex mtx;
-    Pipes(GameController* controller, const Hitbox* birdHitbox, const std::string& topPipeFilename, const std::string& botPipeFilename, 
-          const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
+
+    Pipes(GameController* controller, const Hitbox* birdHitbox, const std::string& topPipeFilename,
+          const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
 };
 
 #endif

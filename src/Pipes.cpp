@@ -49,6 +49,10 @@ Pipes::~Pipes() {
         hitboxes.pop_front();
         hitboxes.pop_front();
     }
+
+    delete randMt;
+    delete distrib;
+    delete Pipes::instance;
 }
 
 void Pipes::update() {
@@ -57,8 +61,10 @@ void Pipes::update() {
     checkCollision();
 }
 void Pipes::createPipe() {
-    if (this->controller->getHasCollided()) { return; }
-
+    if (!controller->getHasStarted() || controller->getHasCollided()) { 
+        return; 
+    }
+    
     if (Pipes::updateCount < Pipes::updatesNeeded) {
         ++Pipes::updateCount;
         return;
@@ -80,7 +86,9 @@ void Pipes::createPipe() {
 }
 
 void Pipes::updatePipes() {
-    if (this->controller->getHasCollided()) { return; }
+    if (!controller->getHasStarted() || controller->getHasCollided()) { 
+        return; 
+    }
 
     for (DrawableObj* obj : pipes) {
         obj->setOffset(obj->getXOffset() + this->xDisplacement, obj->getYOffset());
@@ -99,7 +107,9 @@ void Pipes::updatePipes() {
 }
 
 void Pipes::checkCollision() {
-    if (controller->getHasCollided()) { return; }
+    if (!controller->getHasStarted() || controller->getHasCollided()) { 
+        return; 
+    }
 
     //Y Boundaries Collision
     if (birdHitbox->yTop >= Pipes::Y_MAX ||
@@ -131,4 +141,18 @@ void Pipes::draw() {
     for (DrawableObj* obj : pipes) {
         obj->draw();
     }
+}
+
+void Pipes::reset() {
+    while(pipes.size() > 0) {
+        delete pipes[0];
+        pipes.pop_front();
+    }
+
+    while (hitboxes.size() > 0) {
+        delete hitboxes[0];
+        hitboxes.pop_front();
+    }
+
+    Pipes::updateCount = Pipes::updatesNeeded;
 }

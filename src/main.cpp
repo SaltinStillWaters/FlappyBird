@@ -1,16 +1,16 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
+#include "Resettable.h"
 #include "Bird.h"
 #include "Pipes.h"
 #include "DrawableObj.h"
 #include "Pipes.h"
 #include "SkyHelpers.h"
 #include "GameController.h"
+#include "ScoreDisplay.h"
 
 #include <iostream>
-#include <Windows.h>
-#include <mmsystem.h>
 
 
 std::vector<std::pair<DrawableObj *, GLfloat>> stars;
@@ -19,6 +19,7 @@ Pipes* pipes;
 Bird* bird;
 GameController* controller;
 DrawableObj *sunAndMoon;
+ScoreDisplay* scoreDisplay;
 DrawableObj *ground;
 
 void display();
@@ -33,10 +34,6 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 const GLchar *message, const void *userParam);
 
 int main(int argcp, char **argv) {
-    // Reference for sound. Don't delete yet ty
-    // LPCWSTR str = L"C:\\Users\\Salti\\Downloads\\bg.wav";
-    // PlaySoundW(str, 0, SND_FILENAME | SND_ASYNC);
-
     glutInit(&argcp, argv);
     glutInitWindowSize(900, 900);
     glutCreateWindow("Window");
@@ -95,10 +92,16 @@ void init() {
 
     controller = GameController::getInstance();
 
-    bird = new Bird("bird.data", controller);
+    bird = Bird::getInstance("bird.data", controller);
+    controller->addResettable(bird);
 
     pipes = Pipes::getInstance(controller, bird->getHitbox(), 
-                              "topPipe.data", "botPipe.data", -0.015f, 1.f);
+                               "topPipe.data", "botPipe.data",
+                               -0.015f, 1.f);
+    controller->addResettable (pipes);
+
+    scoreDisplay = ScoreDisplay::getInstance();
+    controller->setScoreDisplay(scoreDisplay);
 }
 
 void display() {
@@ -115,7 +118,8 @@ void display() {
 
     pipes->draw();
     bird->draw();
-    
+    scoreDisplay->draw();
+
     glFlush();
 }
 
@@ -158,6 +162,7 @@ void scroll(int button, int dir, int x, int y) {
 void jump(int key, int state, int x, int y) {
     if (key == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         bird->jump();
+        controller->clickHandler();
     }
 }
 

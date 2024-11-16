@@ -11,6 +11,11 @@ class Hitbox {
 
         Hitbox(float xLeft, float xRight, float yBot, float yTop);
 
+        void setXLeft(float xLeft);
+        void setXRight(float xRight);
+        void setYBot(float yBot);
+        void setYTop(float yTop);
+
         bool checkCollision(const Hitbox& hitbox) const;
         void updateX(float offset);
         void updateY(float offset);
