@@ -8,7 +8,12 @@
 //static members
 ScoreDisplay* ScoreDisplay::instance = nullptr;
 
-ScoreDisplay *ScoreDisplay::getInstance() {
+ScoreDisplay::~ScoreDisplay() {
+    clearDeque();
+}
+
+ScoreDisplay *ScoreDisplay::getInstance()
+{
     if (instance == nullptr) {
         instance = new ScoreDisplay();
     }

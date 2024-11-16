@@ -15,6 +15,7 @@ public:
     void reset() override;
 
     //Singleton
+    ~ScoreDisplay();
     static ScoreDisplay* getInstance();
     ScoreDisplay(const ScoreDisplay& obj) = delete;
 private:

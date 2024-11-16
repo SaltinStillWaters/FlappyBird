@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include <mmsystem.h>
 
+//no need for destructor. All * members exist outside the class and destroyed in main.cpp
 
 GameController* GameController::instance = nullptr;
 
