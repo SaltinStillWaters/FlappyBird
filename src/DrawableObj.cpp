@@ -60,6 +60,11 @@ void DrawableObj::type(std::string name, GLenum drawMode,
                        std::string vertexFilename, AttribFormat *attribFormat,
                        std::string indexFilename, bool normalizedCoords,
                        GLenum vertexUsage, GLenum indexUsage) {
+    if(DrawableObj::typeTemplates.find(name) != DrawableObj::typeTemplates.end()){
+        delete DrawableObj::typeTemplates[name].vertices;
+        delete DrawableObj::typeTemplates[name].indices;
+        DrawableObj::typeTemplates.erase(name);
+    }
     DrawableObj::typeTemplates[name] = {
         new ArrayBuffer(vertexFilename, attribFormat, vertexUsage),
         new IndexBuffer(indexFilename, indexUsage), drawMode, normalizedCoords};
