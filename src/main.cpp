@@ -11,7 +11,7 @@
 #include "ScoreDisplay.h"
 
 #include <iostream>
-
+#include <filesystem>
 
 std::vector<std::pair<DrawableObj *, GLfloat>> stars;
 DrawableObj *sky;
@@ -34,6 +34,11 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id,
                                 const GLchar *message, const void *userParam);
 
 int main(int argcp, char **argv) {
+    std::filesystem::path currentPath = std::filesystem::current_path();
+
+    if (currentPath.filename() == "build")
+        std::filesystem::current_path(currentPath.parent_path());
+    
     glutInit(&argcp, argv);
     glutInitWindowSize(900, 900);
     glutCreateWindow("Window");
