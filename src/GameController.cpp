@@ -7,7 +7,7 @@
 #include <mmsystem.h>
 
 //no need for destructor. All * members exist outside the class and destroyed in main.cpp
-
+//resettables are deleted by their respective implementing classes
 GameController* GameController::instance = nullptr;
 
 GameController::GameController() : hasCollided(false) {}
