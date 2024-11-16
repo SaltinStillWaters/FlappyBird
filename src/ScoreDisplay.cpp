@@ -47,30 +47,31 @@ void ScoreDisplay::updateScore() {
         */
         std::string midStr = { str[mid] };
         drawableDigits.push_back(DrawableObj::create(midStr));
-        drawableDigits.back()->setScale(0.1);
+        drawableDigits.back()->setOffset(0, yOffset);
+        drawableDigits.back()->setScale(scale);
   
         for (int x = 0; x < digits / 2; ++x) {
             std::string rightStr = { str[mid + x + 1] };
             drawableDigits.push_back(DrawableObj::create(rightStr));
-            drawableDigits.back()->setOffset(spacing + x * spacing, 0);
-            drawableDigits.back()->setScale(0.1);
+            drawableDigits.back()->setOffset(spacing + x * spacing, yOffset);
+            drawableDigits.back()->setScale(scale);
 
             std::string leftStr = { str[mid - (x + 1)] };
             drawableDigits.push_front(DrawableObj::create(leftStr));
-            drawableDigits.front()->setOffset(-(spacing + x * spacing), 0);
-            drawableDigits.front()->setScale(0.1);
+            drawableDigits.front()->setOffset(-(spacing + x * spacing), yOffset);
+            drawableDigits.front()->setScale(scale);
         }
     } else {
         for (int x = 0; x < digits / 2; ++x) {
             std::string rightStr = { str[mid + x] };
             drawableDigits.push_back(DrawableObj::create(rightStr));
-            drawableDigits.back()->setOffset(spacing/2 + x * spacing, 0);
-            drawableDigits.back()->setScale(0.1);
+            drawableDigits.back()->setOffset(spacing/2 + x * spacing, yOffset);
+            drawableDigits.back()->setScale(scale);
 
             std::string leftStr = { str[mid - (x + 1)] };
             drawableDigits.push_front(DrawableObj::create(leftStr));
-            drawableDigits.front()->setOffset(-(spacing/2 + x * spacing), 0);
-            drawableDigits.front()->setScale(0.1);
+            drawableDigits.front()->setOffset(-(spacing/2 + x * spacing), yOffset);
+            drawableDigits.front()->setScale(scale);
         }
     }
 }

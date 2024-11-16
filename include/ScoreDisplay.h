@@ -23,6 +23,9 @@ private:
     GLfloat const spacing = .15f;
     std::deque<DrawableObj*> drawableDigits;
     
+    GLfloat const scale = 0.1f;
+    GLfloat const yOffset = .75f; 
+
     void clearDeque();
     void updateScore();
 
