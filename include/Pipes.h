@@ -3,43 +3,63 @@
 
 #include "DrawableObj.h"
 #include "Hitbox.h"
-#include "ArrayBuffer.h"
-#include <deque>
-#include <string>
-#include <random>
+#include "GameController.h"
 
-/*
-To Do
-add birdHitbox to constructor
-*/
+#include <string>
+#include <deque>
+#include <random>
+#include <limits>
+#include <mutex>
+
 class Pipes {
+public:
+    //change to higher value if needed
+    static float constexpr Y_MIN = std::numeric_limits<float>::lowest();
+    
+    //change to lower value if needed
+    static float constexpr Y_MAX = std::numeric_limits<float>::max();
+    
+    ~Pipes();
+    Pipes() = delete;
+    Pipes(const Pipes& obj) = delete;
+
+    static Pipes* getInstance(GameController* controller, const Hitbox* birdHitbox,
+                              const std::string& topPipeFilename, const std::string& botPipeFilename,
+                              const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
+
+    void update();
+    void draw();
+
 private:
     std::deque<DrawableObj*> pipes;
     std::deque<Hitbox*> hitboxes;
 
-    const Hitbox* birdHitbox = new Hitbox(-0.2f, 0.2f, 0.5, 0.9);
+    const Hitbox* birdHitbox;
+    GameController* controller;
 
     const GLfloat xDisplacement;
     const GLfloat ySpace;
-    const float pipeWidth = .33814; //temp
+    static float constexpr pipeWidth = .33814f * 9.f / 16.f; //temp (important)
 
-    static const unsigned int updatesNeeded = 120; //change this as needed
+    static unsigned int constexpr updatesNeeded = 90; //change this as needed
     static unsigned int updateCount;
     
+    //Random
     std::mt19937* randMt;
     std::uniform_int_distribution<int>* distrib;
 
-public:
-    Pipes(const std::string& topPipeFilename, const std::string& botPipeFilename, const GLfloat xDisplacement, const GLfloat ySpace = 0.3);
-    ~Pipes();
     /**
-     * These 3 function should be called in the order of: create, update, checkCollision. They should be called in the most frequently called event. (Idle or Timer);
+     * These 3 function should be called in the order of: create, update, checkCollision.
      */
     void createPipe();
     void updatePipes();
-    bool checkCollision();
+    void checkCollision();
 
-    void draw();
+    //Singleton
+    static Pipes* instance;
+    static std::mutex mtx;
+    Pipes(GameController* controller, const Hitbox* birdHitbox, const std::string& topPipeFilename, const std::string& botPipeFilename, 
+          const GLfloat xDisplacement, const GLfloat ySpace = 0.5);
 };
 
 #endif
