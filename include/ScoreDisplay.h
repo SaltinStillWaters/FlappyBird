@@ -19,11 +19,11 @@ public:
     ScoreDisplay(const ScoreDisplay& obj) = delete;
 private:
     int score = 0;
-    GLfloat const spacing = .15f;
+    GLfloat const spacing = .11f;
     std::deque<DrawableObj*> drawableDigits;
     
-    GLfloat const scale = 0.1f;
-    GLfloat const yOffset = .75f; 
+    GLfloat const scale = 0.15f;
+    GLfloat const yOffset = .8f; 
 
     void clearDeque();
     void updateScore();
