@@ -4,8 +4,6 @@
 #include "Resettable.h"
 #include "ScoreDisplay.h"
 #include <vector>
-#include <Windows.h>
-#include <mmsystem.h>
 
 
 class GameController {
@@ -31,11 +29,7 @@ private:
     ScoreDisplay* scoreDisplay;
     bool hasCollided;
     bool hasStarted;
-
-    LPCWSTR addScoreSound = L"sound/addScoreLowered.wav"; 
-    LPCWSTR collideSound = L"sound/collideLowered.wav"; 
-    LPCWSTR jumpSound = L"sound/jumpLowered.wav"; 
-
+    
     void reset();
 
     //Singleton

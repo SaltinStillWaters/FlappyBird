@@ -13,7 +13,7 @@
                 "-L\"C:\\glew-2.2.0-win32\\glew-2.2.0\\lib\\Release\\x64\"",
                 "-I", "${workspaceFolder}/include",
                 "${workspaceFolder}/src/*.cpp",
-                "-lopengl32", "-lfreeglut", "-lglew32", "-lglu32", "-lwinmm",
+                "-lopengl32", "-lfreeglut", "-lglew32", "-lglu32",
                 "-o", "${workspaceFolder}/build/GraphicsFinals.exe"
             ],
             "group": {
