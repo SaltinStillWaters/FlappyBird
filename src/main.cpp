@@ -6,6 +6,7 @@
 #include "Pipes.h"
 #include "DrawableObj.h"
 #include "Pipes.h"
+#include "Cloud.h"
 #include "SkyHelpers.h"
 #include "GameController.h"
 #include "ScoreDisplay.h"
@@ -21,6 +22,7 @@ GameController* controller;
 DrawableObj *sunAndMoon;
 ScoreDisplay* scoreDisplay;
 DrawableObj *ground;
+Cloud *cloud;
 
 void display();
 void init();
@@ -41,7 +43,8 @@ int main(int argcp, char **argv) {
     
     glutInit(&argcp, argv);
     glutInitWindowSize(900, 900);
-    glutCreateWindow("Window");
+    glutCreateWindow("SudoCodes - Flappy Bird");
+    glutFullScreen();
 
     if (glewInit() != GLEW_OK) {
         std::cout << "Cannot initialize GLEW." << std::endl;
@@ -94,6 +97,7 @@ void init() {
     sunAndMoon->setScale(1.25f);
     ground = DrawableObj::create("ground");
     ground->setPlainColor(ColorUByte({24, 145, 68}));
+    cloud = Cloud::getInstance("cloud100.data", -0.015f, 1.f);
 
     controller = GameController::getInstance();
 
@@ -118,7 +122,7 @@ void display() {
         star.first->draw();
 
     sunAndMoon->draw();
-
+    //cloud->draw();
     ground->draw();
 
     pipes->draw();
@@ -131,6 +135,7 @@ void display() {
 void idle() {
     bird->update();
     pipes->update();
+    //cloud->update();
 
     Sleep(1000 / 60);
     glutPostRedisplay();
@@ -171,13 +176,13 @@ void jump(int key, int state, int x, int y) {
     }
 }
 
-
 void cleanup() {
     delete sky;
     delete bird;
     delete sunAndMoon;
     delete ground;
     delete pipes;
+    delete cloud;
     delete controller;
     delete scoreDisplay;
 
