@@ -21,11 +21,13 @@ GameController* controller;
 DrawableObj *sunAndMoon;
 ScoreDisplay* scoreDisplay;
 DrawableObj *ground;
+bool isFullScreen = false;
 
 void display();
 void init();
 void idle();
 void reshape(int width, int height);
+void keyboard(unsigned char key, int x, int y);
 void scroll(int button, int dir, int x, int y);
 void jump(int key, int state, int x, int y);
 void cleanup();
@@ -40,8 +42,8 @@ int main(int argcp, char **argv) {
         std::filesystem::current_path(currentPath.parent_path());
     
     glutInit(&argcp, argv);
-    glutInitWindowSize(900, 900);
-    glutCreateWindow("Window");
+    glutInitWindowSize(800, 450);
+    glutCreateWindow("Flappy Bird");
 
     if (glewInit() != GLEW_OK) {
         std::cout << "Cannot initialize GLEW." << std::endl;
@@ -55,6 +57,7 @@ int main(int argcp, char **argv) {
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutMouseWheelFunc(scroll);
+    glutKeyboardFunc(keyboard);
     glutIdleFunc(idle);
     glutMouseFunc(jump);
 
@@ -149,6 +152,19 @@ void reshape(int width, int height) {
     DrawableObj::updateScreenDimens(w, h);
 }
 
+void keyboard(unsigned char key, int x, int y) {
+    if(key == 'f' || key == 'F') {
+        if(!isFullScreen){
+            glutFullScreen();
+            isFullScreen = true;
+        } else {
+            glutLeaveFullScreen();
+            isFullScreen = false;
+        }
+    } else if(key == 27){
+        glutLeaveMainLoop();
+    }
+}
 
 void scroll(int button, int dir, int x, int y) {
     scrollCounter = ((scrollCounter + dir * 1) % ((GLint)SKY_CHANGE_DURATION) +
