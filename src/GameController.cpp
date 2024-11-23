@@ -3,8 +3,6 @@
 #include "Bird.h"
 
 #include <iostream>
-#include <Windows.h>
-#include <mmsystem.h>
 
 //no need for destructor. All * members exist outside the class and destroyed in main.cpp
 //resettables are deleted by their respective implementing classes
