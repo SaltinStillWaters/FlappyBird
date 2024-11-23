@@ -25,7 +25,7 @@ bool isFullScreen = false;
 
 void display();
 void init();
-void idle();
+void timer(int value);
 void reshape(int width, int height);
 void keyboard(unsigned char key, int x, int y);
 void scroll(int button, int dir, int x, int y);
@@ -58,9 +58,9 @@ int main(int argcp, char **argv) {
     glutReshapeFunc(reshape);
     glutMouseWheelFunc(scroll);
     glutKeyboardFunc(keyboard);
-    glutIdleFunc(idle);
     glutMouseFunc(jump);
 
+    glutTimerFunc(1000.f / 60.f, timer, 0);
     glutMainLoop();
 
     cleanup();
@@ -129,14 +129,18 @@ void display() {
     scoreDisplay->draw();
 
     glFlush();
+    
 }
 
-void idle() {
-    bird->update();
-    pipes->update();
-
-    Sleep(1000 / 60);
-    glutPostRedisplay();
+void timer(int value) {
+    if(glutGetWindow() != 0){
+        if(bird != nullptr)
+            bird->update();
+        if (pipes != nullptr)
+            pipes->update();
+        glutPostRedisplay();
+        glutTimerFunc(1000.f / 60.f, timer, 0);
+    }
 }
 
 void reshape(int width, int height) {
