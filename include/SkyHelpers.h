@@ -5,7 +5,7 @@
 #include "DrawableObj.h"
 #include <iostream>
 
-const GLuint STAR_COUNT = 25;
+const GLuint STAR_COUNT = 32;
 const GLfloat SKY_CHANGE_DURATION = 50.f;
 const GLfloat SUN_MOON_CHANGE_DEG = 180.f / (SKY_CHANGE_DURATION * 2.f);
 const GLfloat SUN_MOON_SCALE_MAX = 1.25f;
