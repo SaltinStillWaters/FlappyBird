@@ -75,19 +75,29 @@ void init() {
                       &DrawableObj::formatVertexColor, false);
     DrawableObj::type("sunAndMoon", GL_QUADS, "sunAndMoon.data",
                       &DrawableObj::formatVertexColor);
-    DrawableObj::type("star", GL_POLYGON, "star.data",
+    DrawableObj::type("star", GL_QUAD_STRIP, "star.data",
                       &DrawableObj::formatVertexColor);
+    DrawableObj::type("starPoint", GL_POINTS, "starPoint.data",
+                      &DrawableObj::formatVertexOnly);
     DrawableObj::type("ground", GL_TRIANGLE_FAN, "ground.data",
                       &DrawableObj::formatVertexOnly, false);
 
     // Generating stars with random positions.
     srand(time(0));
+    glPointSize(4.f);
     for (int i = 0; i < STAR_COUNT; i++) {
         GLfloat x = (rand() % 100) / 50.f - 1.f;
         GLfloat y = (rand() % 100) / 50.f - 1.f;
         GLfloat starScale = (rand() % 100) / 200.f;
-        stars.push_back({DrawableObj::create("star"), starScale});
-        stars[i].first->setOffset(x, y);
+        if(i % 4 != 0){
+            stars.push_back({DrawableObj::create("star"), starScale});
+            stars[i].first->setOffset(x, y);
+        } else {
+            DrawableObj *temp = DrawableObj::create("starPoint");
+            temp->setPlainColor(ColorUByte({255, 255, 255, 255}));
+            stars.push_back({temp, starScale * 32});
+            stars[i].first->setOffset(x, (y + 1.f) / 8.f - 1.f);
+        }
         stars[i].first->setScale(0.f);
     }
 
