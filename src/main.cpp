@@ -21,7 +21,7 @@ GameController* controller;
 DrawableObj *sunAndMoon;
 ScoreDisplay* scoreDisplay;
 DrawableObj *ground;
-bool isFullScreen = false;
+bool isFullScreen = true;
 
 void display();
 void init();
@@ -44,6 +44,7 @@ int main(int argcp, char **argv) {
     glutInit(&argcp, argv);
     glutInitWindowSize(800, 450);
     glutCreateWindow("Flappy Bird");
+    glutFullScreen();
 
     if (glewInit() != GLEW_OK) {
         std::cout << "Cannot initialize GLEW." << std::endl;
