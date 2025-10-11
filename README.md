@@ -10,7 +10,7 @@
 This is a **Flappy Bird** game made purely using **OpenGL**, a very low-level graphics framework that renders pixels through vectors.  
 It was developed during our **junior year** by a team of four:
 
-- **Raiu (Raphael Paragua)**  
+- **Raiu-0 (Raphael Paragua)**  
 - **SaltinStillWaters (Mychal Pejana)**  
 - **MJadeTC (Marnel Carpio)**  
 - **Rolfdood (Ralph Bello)**  
@@ -30,16 +30,15 @@ The project focuses on implementing **real-time rendering**, **collision detecti
 ---
 
 ## 🧑‍💻 Developers
-- **Raiu (Raphael Paragua)**  
+- **[Raiu-0 (Raphael Paragua)]((https://github.com/Raiu-0)**  
 - **SaltinStillWaters (Mychal Pejana)**  
-- **MJadeTC (Marnel Carpio)**  
-- **Rolfdood (Ralph Bello)**  
+- **[MJadeTC (Marnel Carpio)((https://github.com/mjadetc)**  
+- **[Rolfdood (Ralph Bello)](https://github.com/Rolfdood)**  
 
 ---
 
 ## 🛠️ Technologies Used
 - **Language:** C++  
 - **Framework:** OpenGL  
-- **Rendering:** Low-Level Vector Graphics  
 
 ---
