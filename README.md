@@ -1,60 +1,45 @@
+# 🐤 Flappy Bird (OpenGL)
+
+![Language](https://img.shields.io/badge/Language-C++-blue?style=for-the-badge)
+![Framework](https://img.shields.io/badge/Framework-OpenGL-green?style=for-the-badge)
+![Graphics](https://img.shields.io/badge/Rendering-Low--Level%20Vector%20Graphics-orange?style=for-the-badge)
 
 ---
-***NOTE:***
-- *Most objects should be declared globally and dynamically to avoid unintended deletion of objects.*
 
->`ArrayBuffer  *buffer;`
->
->`IndexBuffer  *ibuffer;`
->
->`DrawableObj  *obj;`
->
->`AttribFormat  *attribFormat;`
+## 🧩 Overview
+This is a **Flappy Bird** game made purely using **OpenGL**, a very low-level graphics framework that renders pixels through vectors.  
+It was developed during our **junior year** by a team of four:
 
-- Ensure GL_VERTEX_ARRAY and GL_COLOR_ARRAY is enabled on client state.
+- **Raiu (Raphael Paragua)**  
+- **SaltinStillWaters (Mychal Pejana)**  
+- **MJadeTC (Marnel Carpio)**  
+- **Rolfdood (Ralph Bello)**  
 
----  
-
-To use the DrawableObj class, you must first specify the vertex format/s of your vertex file/s.
-
-You can achieve this by:
-
->`attribFormat = new AttribFormat();`
->
->`attribFormat->addAttrib<GLfloat>(2, GL_VERTEX_ARRAY);`
->
->`attribFormat->addAttrib<GLubyte>(3, GL_COLOR_ARRAY);`
-
-- The template parameter will specify the data type of the vertex attribute.
-- First method parameter is the number of components.
-- Second method parameter is the attribute name.
--- (Only vertex arrays and color arrays are supported as of now.)
-- The whole attribFormat object represents a format of a buffer and can be reused.
+The project focuses on implementing **real-time rendering**, **collision detection**, and **smooth animation** using **raw OpenGL functions** without any game engine support.
 
 ---
-An ArrayBuffer is then needed to obtain vertex data. The attribute format declared earlier must be passed to parse the file given.
 
->`buffer = new ArrayBuffer("vertices.data", attribFormat);`
+## 🖼️ Preview
 
-An IndexBuffer is optional; only if wanted. All indices will use the GLuint data type.
-
->`ibuffer  =  new  IndexBuffer("indices.data");`
+<p align="center">
+  <img src="images/1.png" alt="Flappy Bird Gameplay 1" width="30%" style="margin-right: 10px;">
+  <img src="images/2.png" alt="Flappy Bird Gameplay 2" width="30%" style="margin-right: 10px;">
+  <img src="images/3.png" alt="Flappy Bird Gameplay 3" width="30%">
+</p>
 
 ---
-To declare a DrawableObj, you must specify the mode and vertex data (ArrayBuffer).
 
->`obj  =  new  DrawableObj(GL_QUADS,  buffer);`
+## 🧑‍💻 Developers
+- **Raiu (Raphael Paragua)**  
+- **SaltinStillWaters (Mychal Pejana)**  
+- **MJadeTC (Marnel Carpio)**  
+- **Rolfdood (Ralph Bello)**  
 
-You can also specify an index buffer either by adding the line:
+---
 
->`obj->setIndexBuffer(ibuffer);`
+## 🛠️ Technologies Used
+- **Language:** C++  
+- **Framework:** OpenGL  
+- **Rendering:** Low-Level Vector Graphics  
 
-or by changing the constructor to:
-
->`obj  =  new  DrawableObj(GL_QUADS,  buffer,  ibuffer);`
-
-To draw the object, simply call:
-
->`obj->draw();
-
-*\*Users must call glFlush() after to see the object.\**
+---
