@@ -1,4 +1,4 @@
-# 🐤 Flappy Bird (OpenGL)
+# Flappy Bird (OpenGL)
 
 ![Language](https://img.shields.io/badge/Language-C++-blue?style=for-the-badge)
 ![Framework](https://img.shields.io/badge/Framework-OpenGL-green?style=for-the-badge)
@@ -6,20 +6,15 @@
 
 ---
 
-## 🧩 Overview
+## Overview
 This is a **Flappy Bird** game made purely using **OpenGL**, a very low-level graphics framework that renders pixels through vectors.  
-It was developed during our **junior year** by a team of four:
-
-- **Raiu-0 (Raphael Paragua)**  
-- **SaltinStillWaters (Mychal Pejana)**  
-- **MJadeTC (Marnel Carpio)**  
-- **Rolfdood (Ralph Bello)**  
+It was developed during our **junior year** by a team of four.
 
 The project focuses on implementing **real-time rendering**, **collision detection**, and **smooth animation** using **raw OpenGL functions** without any game engine support.
 
 ---
 
-## 🖼️ Preview
+## Preview
 
 <p align="center">
   <img src="images/1.png" alt="Flappy Bird Gameplay 1" width="30%" style="margin-right: 10px;">
@@ -30,9 +25,9 @@ The project focuses on implementing **real-time rendering**, **collision detecti
 ---
 
 ## 🧑‍💻 Developers
-- **[Raiu-0 (Raphael Paragua)]((https://github.com/Raiu-0)**  
+- **[Raiu-0 (Raphael Paragua)](https://github.com/Raiu-0)**  
 - **SaltinStillWaters (Mychal Pejana)**  
-- **[MJadeTC (Marnel Carpio)((https://github.com/mjadetc)**  
+- **[MJadeTC (Marnel Carpio)](https://github.com/mjadetc)**  
 - **[Rolfdood (Ralph Bello)](https://github.com/Rolfdood)**  
 
 ---
