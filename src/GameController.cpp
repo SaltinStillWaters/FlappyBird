@@ -22,6 +22,7 @@ bool GameController::getHasCollided() const { return hasCollided; }
 bool GameController::getHasStarted() const { return hasStarted; }
 
 void GameController::setHasCollided() { 
+    PlaySoundW(collideSound, 0, SND_FILENAME | SND_ASYNC);
     hasCollided = true; 
 }
 
@@ -29,6 +30,7 @@ void GameController::setHasStarted() { hasStarted = true; }
 
 void GameController::addScore() { 
     scoreDisplay->setScore();
+    PlaySoundW(addScoreSound, 0, SND_FILENAME | SND_ASYNC);
 }
 
 void GameController::addResettable(Resettable* r) {
